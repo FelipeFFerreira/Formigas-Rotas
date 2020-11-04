@@ -7,6 +7,5 @@ int main()
     printf("Formigas!\n\n");
     init_agentes();
     init_mapa();
-    teste_init_agentes();
     return 0;
 }

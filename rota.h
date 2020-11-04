@@ -4,6 +4,8 @@
 
 #define LIN 5
 #define COL 6
+#define INTERACOES 20000
+#define QTD_AGENTES 30
 
 typedef struct {
     int linha;
@@ -11,14 +13,15 @@ typedef struct {
     int dado;
 }mapa;
 
-
+typedef struct
+{
+    mapa * m;
+    unsigned long long int  dis;
+}possibilidades;
 
 void init_mapa();
 
-void init_rota_agentes();
-
-void teste_init_agentes();
-
+void init_agentes();
 
 
 

@@ -16,11 +16,22 @@ struct lst_no {
     lst_ptr prox;
 };
 
+typedef possibilidades lst_info_aux;
+typedef struct lst_no_aux * lst_ptr_aux;
+struct lst_no_aux {
+    lst_info_aux dado;
+    lst_ptr_aux prox;
+};
+
 /* inicializa a lista ordenada */
 void lst_init(lst_ptr *);
 
+void lst_init_aux(lst_ptr_aux * l);
+
 /* insere um novo elemento na lista ordenada */
 void lst_ins(lst_ptr *, lst_info);
+
+void lst_ins_aux(lst_ptr_aux * l, lst_info_aux val);
 
 /* remove um elemento da lista ordenada */
 bool lst_rem(lst_ptr *, lst_info);

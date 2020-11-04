@@ -11,6 +11,11 @@ void lst_init(lst_ptr * l)
     *l = NULL;
 }
 
+void lst_init_aux(lst_ptr_aux * l)
+{
+    *l = NULL;
+}
+
 void lst_ins(lst_ptr * l, lst_info val)
 {
     lst_ptr n;
@@ -25,6 +30,28 @@ void lst_ins(lst_ptr * l, lst_info val)
     }
     else {
         lst_ptr p = *l;
+        while (p->prox != NULL) {
+            p = p->prox;
+        }
+        n->prox = p->prox;
+        p->prox = n;
+    }
+}
+
+void lst_ins_aux(lst_ptr_aux * l, lst_info_aux val)
+{
+    lst_ptr_aux n;
+    if ((n = (lst_ptr_aux) malloc(sizeof(struct lst_no_aux))) == NULL) {
+        fprintf(stderr, "Erro de alocacao de memoria!\n");
+        exit(1);
+    }
+    n->dado = val;
+    if (*l == NULL) {
+       n->prox = *l;
+       *l = n;
+    }
+    else {
+        lst_ptr_aux p = *l;
         while (p->prox != NULL) {
             p = p->prox;
         }
