@@ -51,6 +51,12 @@ void distancia(Formiga * f, mapa * pos_atual, mapa * pos_comparacao)
     if(pos_atual->dado == final.dado)f->flag_final = true;
 }
 
+//go do
+mapa * best_decisao(Formiga * f)
+{
+
+}
+
 int calc_notas_totais_possibilidades(Formiga * f)
 {
     lst_ptr_aux l = f->lst_aux;
@@ -61,13 +67,16 @@ int calc_notas_totais_possibilidades(Formiga * f)
      return nota_total;
 }
 
+//go do
 void roleta(Formiga * f)
 {
     lst_ptr_aux l_inicio = f->lst_aux;
     lst_ptr_aux l_final = f->lst_aux->ant;
     int soma_pesos = calc_notas_totais_possibilidades(f);
     while(l_inicio != NULL) {
-        l_inicio->dado.fx_roleta.porc = l_final->dado.dis / soma_pesos;
+        l_inicio->dado.fx_roleta.porc = (double)l_final->dado.dis / soma_pesos;
+        l_inicio->dado.fx_roleta.inf = l_inicio == f->lst_aux ? 0 : l_inicio->ant->dado.fx_roleta.sup;
+        l_inicio->dado.fx_roleta.sup = l_inicio->dado.fx_roleta.sup + l_inicio->dado.fx_roleta.porc;
         l_inicio =  l_inicio->prox;
         l_final = l_final->prox;
     }
@@ -86,6 +95,7 @@ void interacoes()
             if(!(pos_atual->col - 1 < 0)) distancia(&agentes[i], pos_atual, &matriz[pos_atual->linha][pos_atual->col - 1]);
             if(pos_atual->col != COL - 1) distancia(&agentes[i], pos_atual, &matriz[pos_atual->linha][pos_atual->col + 1]);
             roleta(&agentes[i]);
+            lst_ins(&agentes[i].rota, best_decisao(&agentes[i]));
         }
     }
 }
