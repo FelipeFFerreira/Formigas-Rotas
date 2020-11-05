@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include "lista.h"
 
+/******Objetos Privados****/
 typedef struct
 {
     int id;
@@ -17,7 +18,6 @@ mapa inicio_ = {4, 0, 25};
 mapa final = {1, 5, 12};
 mapa matriz[LIN][COL];
 Formiga agentes[QTD_AGENTES];
-
 
 /************* Area de testes *******************/
 void print_celula_rota(mapa * m)
@@ -37,7 +37,6 @@ void teste_init_agentes()
     }
 }
 
-
 /*********Funcoes Privadas**************/
 
 void distancia(Formiga * f, mapa * pos_atual, mapa * pos_comparacao)
@@ -52,6 +51,28 @@ void distancia(Formiga * f, mapa * pos_atual, mapa * pos_comparacao)
     if(pos_atual->dado == final.dado)f->flag_final = true;
 }
 
+int calc_notas_totais_possibilidades(Formiga * f)
+{
+    lst_ptr_aux l = f->lst_aux;
+    int nota_total;
+     while(l != NULL) {
+        nota_total +=  l->dado.dis;
+     }
+     return nota_total;
+}
+
+void roleta(Formiga * f)
+{
+    lst_ptr_aux l_inicio = f->lst_aux;
+    lst_ptr_aux l_final = f->lst_aux->ant;
+    int soma_pesos = calc_notas_totais_possibilidades(f);
+    while(l_inicio != NULL) {
+        l_inicio->dado.fx_roleta.porc = l_final->dado.dis / soma_pesos;
+        l_inicio =  l_inicio->prox;
+        l_final = l_final->prox;
+    }
+}
+
 void interacoes()
 {
     int i;
@@ -64,10 +85,10 @@ void interacoes()
             if(pos_atual->linha != LIN - 1) distancia(&agentes[i], pos_atual, &matriz[pos_atual->linha + 1][pos_atual->col]);
             if(!(pos_atual->col - 1 < 0)) distancia(&agentes[i], pos_atual, &matriz[pos_atual->linha][pos_atual->col - 1]);
             if(pos_atual->col != COL - 1) distancia(&agentes[i], pos_atual, &matriz[pos_atual->linha][pos_atual->col + 1]);
+            roleta(&agentes[i]);
         }
     }
 }
-
 
 /*******Funcoes Publicas***********/
 

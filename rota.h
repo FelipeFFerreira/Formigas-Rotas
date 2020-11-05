@@ -7,18 +7,28 @@
 #define INTERACOES 20000
 #define QTD_AGENTES 30
 
+/********Objetos Publicos*************/
+
 typedef struct {
     int linha;
     int col;
     int dado;
 }mapa;
 
+typedef struct {
+    double inf;
+    double sup;
+    double porc;
+}faixas_roleta;
+
 typedef struct
 {
     mapa * m;
     unsigned long long int  dis;
+    faixas_roleta fx_roleta;
 }possibilidades;
 
+/**********Funcoes Publicas***************/
 void init_mapa();
 
 void init_agentes();

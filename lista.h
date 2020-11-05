@@ -21,6 +21,7 @@ typedef struct lst_no_aux * lst_ptr_aux;
 struct lst_no_aux {
     lst_info_aux dado;
     lst_ptr_aux prox;
+    lst_ptr_aux ant;
 };
 
 /* inicializa a lista ordenada */
