@@ -1,5 +1,5 @@
 /*
-* Implementação das operações sobre o TAD lista Encadeada Simpes
+* Implementação das operações sobre o TAD lista encadeada e duplamente encadeada.
 */
 
 #include "lista.h"
@@ -13,7 +13,12 @@ void lst_init(lst_ptr * l)
 
 void lst_init_aux(lst_ptr_aux * l)
 {
-    *l = NULL;
+    if((*l = (lst_ptr) malloc(sizeof(struct lst_no))) == NULL) {
+        printf("Erro de alocacao de memoria!\n");
+        exit(1);
+    }
+    (*l)->prox = (*l)->ant = *l;
+    (*l)->dado = 0;
 }
 
 void lst_ins(lst_ptr * l, lst_info val)
@@ -38,28 +43,23 @@ void lst_ins(lst_ptr * l, lst_info val)
     }
 }
 
-void lst_ins_aux(lst_ptr_aux * l, lst_info_aux val)
-{
-    lst_ptr_aux n;
-    if ((n = (lst_ptr_aux) malloc(sizeof(struct lst_no_aux))) == NULL) {
-        fprintf(stderr, "Erro de alocacao de memoria!\n");
-        exit(1);
+void lst_ins_aux(lst_ptr_aux l, lst_info_aux val) {
+	lst_ptr_aux n, p;
+	if ((n = (lst_ptr_aux) malloc(sizeof(struct lst_no_aux))) == NULL) {
+		printf("Error ao inserir na Lista [Alocacao de memoria]");
+		exit(1);;
+	}
+	n->dado = val;
+    p = l;
+    while (p->prox != l && val > p->prox->dado) {
+        p = p->prox;
     }
-    n->dado = val;
-    if (*l == NULL) {
-       n->prox = *l;
-       *l = n;
-    }
-    else {
-        lst_ptr_aux p = *l;
-        while (p->prox != NULL) {
-            p = p->prox;
-        }
-        n->prox = p->prox;
-        p->prox = n;
-    }
+    n->prox = p->prox;
+    n->ant = p;
+    p->prox->ant = n;
+    p->prox = n;
+    ++l->dado;
 }
-
 /*
 bool lst_rem(lst_ptr * l, lst_info x)
 {
