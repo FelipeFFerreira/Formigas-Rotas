@@ -4,8 +4,9 @@
 
 int main()
 {
-    printf("Formigas!\n\n");
+    printf("Algoritmo de otimiazacao de rota baseado em colonia de Formigas!\n\n");
     init_agentes();
     init_mapa();
+    interacoes();
     return 0;
 }

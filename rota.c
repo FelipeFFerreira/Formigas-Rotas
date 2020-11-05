@@ -2,13 +2,14 @@
 #include <math.h>
 #include <stdio.h>
 #include "lista.h"
+#include "dlst.h"
 
 /******Objetos Privados****/
 typedef struct
 {
     int id;
     lst_ptr rota;
-    lst_ptr_aux lst_aux ;
+    dlst_ptr lst_aux ;
     bool flag_init;
     bool flag_final;
 }Formiga;
@@ -46,7 +47,7 @@ void distancia(Formiga * f, mapa * pos_atual, mapa * pos_comparacao)
     unsigned int col = sqrt(pow((pos_atual->col - pos_comparacao->col), 2));
     possib_aux.dis =  pow((lin + col) * 20, 2);
     possib_aux.m = pos_comparacao;
-    lst_ins_aux(&(f->lst_aux), possib_aux);
+    dlst_inserir(f->lst_aux, possib_aux);
     if(pos_atual->dado == inicio_.dado)f->flag_init = true;
     if(pos_atual->dado == final.dado)f->flag_final = true;
 }
@@ -59,7 +60,7 @@ mapa * best_decisao(Formiga * f)
 
 int calc_notas_totais_possibilidades(Formiga * f)
 {
-    lst_ptr_aux l = f->lst_aux;
+    dlst_ptr l = f->lst_aux;
     int nota_total;
      while(l != NULL) {
         nota_total +=  l->dado.dis;
@@ -70,8 +71,8 @@ int calc_notas_totais_possibilidades(Formiga * f)
 //go do
 void roleta(Formiga * f)
 {
-    lst_ptr_aux l_inicio = f->lst_aux;
-    lst_ptr_aux l_final = f->lst_aux->ant;
+    dlst_ptr l_inicio = f->lst_aux;
+    dlst_ptr l_final = f->lst_aux->ant;
     int soma_pesos = calc_notas_totais_possibilidades(f);
     while(l_inicio != NULL) {
         l_inicio->dado.fx_roleta.porc = (double)l_final->dado.dis / soma_pesos;
@@ -108,10 +109,10 @@ void init_agentes()
     for(i = 0; i < QTD_AGENTES; i++){
         agentes[i].id = i + 1;
         lst_init(&agentes[i].rota);
+        dlst_init(&agentes[i].lst_aux);
     }
 }
 
-/*Inicializa mapa, atribui local inicial de cada agente*/
 void init_mapa()
 {
     int i, j, cont = 0;
@@ -120,6 +121,7 @@ void init_mapa()
             matriz[i][j].dado = cont + 1;
             matriz[i][j].linha = i;
             matriz[i][j].col = j;
+            matriz[i][j].feromonio = FEROMONIO;
             lst_ins(&agentes[cont].rota, &matriz[i][j]);
             cont += 1;
         }

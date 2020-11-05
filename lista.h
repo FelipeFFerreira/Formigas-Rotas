@@ -16,37 +16,18 @@ struct lst_no {
     lst_ptr prox;
 };
 
-typedef possibilidades lst_info_aux;
-typedef struct lst_no_aux * lst_ptr_aux;
-struct lst_no_aux {
-    lst_info_aux dado;
-    lst_ptr_aux prox;
-    lst_ptr_aux ant;
-};
-
-/* inicializa a lista ordenada */
+/* inicializa a lista*/
 void lst_init(lst_ptr *);
 
-void lst_init_aux(lst_ptr_aux * l);
-
-/* insere um novo elemento na lista ordenada */
+/* insere um novo elemento na lista*/
 void lst_ins(lst_ptr *, lst_info);
 
-void lst_ins_aux(lst_ptr_aux * l, lst_info_aux val);
-
-/* remove um elemento da lista ordenada */
-bool lst_rem(lst_ptr *, lst_info);
-
-/* procura e devolve o ponteiro para o nó da lista
- * que contém um valor, ou NULL, caso o valor não
- * seja localizado */
-lst_ptr lst_find(lst_ptr, lst_info);
-
-/* imprime os elementos da lista ordenada */
+/* imprime os elementos da lista*/
 void lst_print(lst_ptr);
 
-/* destrói uma lista ordenada */
+/* destrói uma lista*/
 void lst_kill(lst_ptr *);
 
 lst_info lst_pop_get(lst_ptr);
+
 #endif
