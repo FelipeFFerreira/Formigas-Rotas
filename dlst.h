@@ -23,13 +23,6 @@ void dlst_init(dlst_ptr *);
 /* função que insere um novo nó na lista ordenada */
 void dlst_inserir(dlst_ptr, dlst_info);
 
-/* função que remove um nó da lista ordenada */
-bool dlst_remover(dlst_ptr, dlst_info);
-
-/* função que imprime a lista em ordem crescente */
-void dlst_print_cresc(dlst_ptr);
-
-/* função que imprime a lista em ordem decrescente */
-void dlst_printf_dec(dlst_ptr);
+void dlst_print_cresc(dlst_ptr l);
 
 #endif // _DLST_H

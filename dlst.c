@@ -39,19 +39,14 @@ void dlst_print_cresc(dlst_ptr l)
     dlst_ptr p = l->prox;
     printf("[ ");
     while (p != l) {
-        printf("%d,", p->dado.dis);
+        /*printf("[%d. %d,%d] ,",
+                p->dado.m->dado,
+                p->dado.m->linha,
+                p->dado.m->col);*/
+                printf("%d, ",
+                p->dado.m->dado);
         p = p->prox;
     }
     printf("\b ]\n");
 }
 
-void dlst_print_dec(dlst_ptr l)
-{
-    dlst_ptr p = l->ant;
-    printf("[ ");
-    while (p != l) {
-        printf("%d,", p->dado);
-        p = p->ant;
-    }
-    printf("\b ]\n");
-}

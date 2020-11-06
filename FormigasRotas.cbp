@@ -31,6 +31,10 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
+		<Unit filename="dlst.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="dlst.h" />
 		<Unit filename="lista.c">
 			<Option compilerVar="CC" />
 		</Unit>
