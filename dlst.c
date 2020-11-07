@@ -37,16 +37,19 @@ void dlst_inserir(dlst_ptr l, dlst_info x)
 void dlst_print_cresc(dlst_ptr l)
 {
     dlst_ptr p = l->prox;
-    printf("[ ");
     while (p != l) {
         /*printf("[%d. %d,%d] ,",
                 p->dado.m->dado,
                 p->dado.m->linha,
                 p->dado.m->col);*/
-                printf("%d, ",
-                p->dado.m->dado);
+                printf("R: %d\nPorc: %g\nLimInf: %g\nLimSup: %g\n",
+                p->dado.m->dado,
+                p->dado.fx_roleta.porc,
+                p->dado.fx_roleta.inf,
+                p->dado.fx_roleta.sup);
+                printf("--------------\n");
         p = p->prox;
     }
-    printf("\b ]\n");
+    printf("\n");
 }
 
