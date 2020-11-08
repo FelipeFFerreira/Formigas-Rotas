@@ -42,8 +42,9 @@ void dlst_print_cresc(dlst_ptr l)
                 p->dado.m->dado,
                 p->dado.m->linha,
                 p->dado.m->col);*/
-                printf("R: %d\nPorc: %g\nLimInf: %g\nLimSup: %g\n",
+                printf("R: %d\nDis: %llu\nPorc: %g\nLimInf: %g\nLimSup: %g\n",
                 p->dado.m->dado,
+                p->dado.dis,
                 p->dado.fx_roleta.porc,
                 p->dado.fx_roleta.inf,
                 p->dado.fx_roleta.sup);
