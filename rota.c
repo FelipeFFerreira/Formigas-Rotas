@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <math.h>
+#include <time.h>
 #include <stdio.h>
 #include <stdbool.h>
 #include "lista.h"
@@ -62,10 +63,15 @@ void distancia(Formiga * f, mapa * pos_atual, mapa * pos_comparacao)
     dlst_inserir(f->lst_aux, possib_aux);
 }
 
-//go do
+//go do : doing
 mapa * best_decisao(Formiga * f)
 {
-
+    double n = rand() / (double)RAND_MAX;
+    dlst_ptr p = f->lst_aux->prox;
+    while(p != f->lst_aux) {
+        if(n > p->dado.fx_roleta.inf && n < p->dado.fx_roleta.sup) return p->dado.m;
+    }
+    return NULL;
 }
 
 int calc_notas_totais_possibilidades(Formiga * f)
@@ -79,7 +85,6 @@ int calc_notas_totais_possibilidades(Formiga * f)
      return nota_total;
 }
 
-//go do : doing
 void roleta(Formiga * f)
 {
     dlst_ptr l_inicio = f->lst_aux->prox;
@@ -119,9 +124,8 @@ void interacoes()
                 distancia(&agentes[i], pos_comparacao, &matriz[pos_atual->linha][pos_atual->col + 1]);
 
             roleta(&agentes[i]);
+            lst_ins(&agentes[i].rota, best_decisao(&agentes[i]));
             break;
-
-            //lst_ins(&agentes[i].rota, best_decisao(&agentes[i]));
         }
     }
 }

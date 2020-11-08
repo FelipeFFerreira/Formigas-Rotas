@@ -1,7 +1,8 @@
 # depslib dependency file v1.0
-1604625402 source:c:\github\formigasrotas\main.c
+1604844188 source:c:\github\formigasrotas\main.c
 	<stdio.h>
 	<stdlib.h>
+	<time.h>
 	"rota.h"
 
 1604693288 c:\github\formigasrotas\rota.h
