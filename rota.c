@@ -67,7 +67,8 @@ void distancia(Formiga * f, mapa * pos_atual, mapa * pos_comparacao)
 //go do : doing
 mapa * best_decisao(Formiga f)
 {
-    double n = rand() / (double)RAND_MAX;
+    //double n = rand() / (double)RAND_MAX;
+    double n = 0.99;
     dlst_ptr p = f.lst_aux->prox;
     while(p != f.lst_aux) {
         if(n > p->dado.fx_roleta.inf && n < p->dado.fx_roleta.sup) return p->dado.m;
