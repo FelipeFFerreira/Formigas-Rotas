@@ -7,7 +7,7 @@
 
 #define INTERACOES 20000
 #define QTD_AGENTES 30
-#define FEROMONIO 1.0
+#define FEROMONIO 0.1
 
 /********Objetos Publicos*************/
 
