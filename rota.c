@@ -44,7 +44,7 @@ void teste_escolha_rotas_agentes()
     for(i = 0; i < QTD_AGENTES; i++) {
         printf("------------------------------------------------------------\n");
         printf("Agente %d\n", agentes[i].id);
-        printf("Total %d\n", agentes[i].lst_aux->dado.dis);
+        printf("Total %lf\n", agentes[i].lst_aux->dado.dis);
         dlst_print_cresc(agentes[i].lst_aux);
         printf("Best Rota = %d\n", lst_pop_get(agentes[i].rota)->dado);
         printf("------------------------------------------------------------\n\n");
@@ -56,19 +56,19 @@ void teste_escolha_rotas_agentes()
 
 void distancia(Formiga * f, mapa * pos_atual, mapa * pos_comparacao)
 {
+    int dado = f->id;
     possibilidades possib_aux;
     unsigned int lin = sqrt(pow((pos_atual->linha - pos_comparacao->linha), 2));
     unsigned int col = sqrt(pow((pos_atual->col - pos_comparacao->col), 2));
     possib_aux.m = pos_comparacao;
     possib_aux.dis =  pow((lin + col) * 1, 1);
+    possib_aux.txy = (double)(1.0 / ((double)possib_aux.dis));
     dlst_inserir(f->lst_aux, possib_aux);
 }
 
-//go do : doing
 mapa * best_decisao(Formiga f)
 {
-    //double n = rand() / (double)RAND_MAX;
-    double n = 0.99;
+    double n = rand() / (double)RAND_MAX;
     dlst_ptr p = f.lst_aux->prox;
     while(p != f.lst_aux) {
         if(n > p->dado.fx_roleta.inf && n < p->dado.fx_roleta.sup) return p->dado.m;
@@ -77,12 +77,12 @@ mapa * best_decisao(Formiga f)
     return NULL;
 }
 
-int calc_notas_totais_possibilidades(Formiga * f)
+double calc_notas_totais_possibilidades(Formiga * f)
 {
     dlst_ptr l = f->lst_aux->prox;
-    int nota_total;
+    double nota_total = 0;
      while(l != f->lst_aux) {
-        nota_total +=  l->dado.dis;
+        nota_total +=  l->dado.txy;
         l = l->prox;
      }
      return nota_total;
@@ -91,15 +91,12 @@ int calc_notas_totais_possibilidades(Formiga * f)
 void roleta(Formiga * f)
 {
     dlst_ptr l_inicio = f->lst_aux->prox;
-    dlst_ptr l_final = f->lst_aux->ant;
-    int soma_pesos = calc_notas_totais_possibilidades(f);
-    f->lst_aux->dado.dis = soma_pesos;
+    double soma_pesos = calc_notas_totais_possibilidades(f);
     while(l_inicio != f->lst_aux) {
-        l_inicio->dado.fx_roleta.porc = (double)l_final->dado.dis / soma_pesos;
+        l_inicio->dado.fx_roleta.poc_xy = l_inicio->dado.txy / soma_pesos;
         l_inicio->dado.fx_roleta.inf = l_inicio == f->lst_aux->prox ? 0 : l_inicio->ant->dado.fx_roleta.sup;
-        l_inicio->dado.fx_roleta.sup = l_inicio->dado.fx_roleta.inf + l_inicio->dado.fx_roleta.porc;
+        l_inicio->dado.fx_roleta.sup = l_inicio->dado.fx_roleta.inf + l_inicio->dado.fx_roleta.poc_xy;
         l_inicio =  l_inicio->prox;
-        l_final = l_final->ant;
     }
 }
 

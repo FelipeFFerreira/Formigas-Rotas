@@ -25,7 +25,7 @@ void dlst_inserir(dlst_ptr l, dlst_info x)
     }
     n->dado = x;
     p = l;
-    while (p->prox != l && x.dis > p->prox->dado.dis) {
+    while (p->prox != l && x.txy > p->prox->dado.txy) {
         p = p->prox;
     }
     n->prox = p->prox;
@@ -45,7 +45,7 @@ void dlst_print_cresc(dlst_ptr l)
                 printf("R: %d\nDis: %llu\nPorc: %g\nLimInf: %g\nLimSup: %g\n",
                 p->dado.m->dado,
                 p->dado.dis,
-                p->dado.fx_roleta.porc,
+                p->dado.fx_roleta.poc_xy,
                 p->dado.fx_roleta.inf,
                 p->dado.fx_roleta.sup);
                 printf("--------------\n");

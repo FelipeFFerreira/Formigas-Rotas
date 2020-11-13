@@ -7,7 +7,7 @@
 
 #define INTERACOES 20000
 #define QTD_AGENTES 30
-#define FEROMONIO 1;
+#define FEROMONIO 1.0
 
 /********Objetos Publicos*************/
 
@@ -15,18 +15,19 @@ typedef struct {
     int linha;
     int col;
     int dado;
-    int feromonio;
+    double feromonio;
 }mapa;
 
 typedef struct {
     double inf;
     double sup;
-    double porc;
+    double poc_xy;
 }faixas_roleta;
 
 typedef struct
 {
     mapa * m;
+    double txy;
     unsigned long long int  dis;
     faixas_roleta fx_roleta;
 }possibilidades;
