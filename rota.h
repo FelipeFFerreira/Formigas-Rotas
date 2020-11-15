@@ -39,6 +39,7 @@ void init_mapa();
 
 void init_agentes();
 
+void init_best_rota();
 
 
 #endif // _ROTA_H

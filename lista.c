@@ -13,6 +13,7 @@ void lst_init(lst_ptr * l)
 
 void lst_ins(lst_ptr * l, lst_info val)
 {
+    static int i = 0;
     lst_ptr n;
     if ((n = (lst_ptr) malloc(sizeof(struct lst_no))) == NULL) {
         fprintf(stderr, "Erro de alocacao de memoria!\n");
@@ -31,6 +32,8 @@ void lst_ins(lst_ptr * l, lst_info val)
         n->prox = p->prox;
         p->prox = n;
     }
+
+    i = i >= 1 ? 0 : i + 1;
 }
 
 void lst_print(lst_ptr l)

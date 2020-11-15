@@ -14,11 +14,11 @@ typedef struct
     dlst_ptr lst_aux ;
 }Formiga;
 
-/*****Variaveis Globais******/
-mapa inicio_ = {4, 0, 25};
-mapa final = {1, 5, 12};
-mapa matriz[LIN][COL];
-Formiga agentes[QTD_AGENTES];
+/*****Variaveis Privadas******/
+static mapa inicio_ = {4, 0, 25};
+static mapa final = {1, 5, 12};
+static mapa matriz[LIN][COL];
+static Formiga agentes[QTD_AGENTES];
 
 /************* Area de testes *******************/
 void print_celula_rota(mapa * m)
@@ -63,7 +63,7 @@ void print_rota_agentes()
 
 /*********Funcoes Privadas**************/
 
-void distancia(Formiga f, mapa * pos_atual, mapa * pos_comparacao)
+static void distancia(Formiga f, mapa * pos_atual, mapa * pos_comparacao)
 {
     possibilidades possib_aux;
     unsigned int lin = sqrt(pow((pos_atual->linha - pos_comparacao->linha), 2));
@@ -74,7 +74,7 @@ void distancia(Formiga f, mapa * pos_atual, mapa * pos_comparacao)
     dlst_inserir(f.lst_aux, possib_aux);
 }
 
-mapa * best_decisao(Formiga f)
+static mapa * best_decisao(Formiga f)
 {
     double n = rand() / (double)RAND_MAX;
     dlst_ptr p = f.lst_aux->prox;
@@ -85,7 +85,7 @@ mapa * best_decisao(Formiga f)
     return NULL;
 }
 
-double calc_notas_totais_possibilidades(Formiga f)
+static double calc_notas_totais_possibilidades(Formiga f)
 {
     dlst_ptr l = f.lst_aux->prox;
     double nota_total = 0;
@@ -96,7 +96,7 @@ double calc_notas_totais_possibilidades(Formiga f)
      return nota_total;
 }
 
-void roleta(Formiga f)
+static void roleta(Formiga f)
 {
     dlst_ptr l_inicio = f.lst_aux->prox;
     double soma_pesos = calc_notas_totais_possibilidades(f);
@@ -108,7 +108,7 @@ void roleta(Formiga f)
     }
 }
 
-void interacoes()
+static void interacoes()
 {
     int i;
     for(i = 0; i < QTD_AGENTES; i++){
@@ -117,7 +117,6 @@ void interacoes()
         mapa * pos_comparacao = &inicio_;
         while(true) {
             pos_atual = lst_pop_get(agentes[i].rota);
-            int pos_atual_debug = pos_atual->dado;
             if(!flag_init && pos_atual->dado == inicio_.dado) {
                 pos_comparacao = &final;
                 flag_init = true;
@@ -165,4 +164,9 @@ void init_mapa()
             cont += 1;
         }
     }
+}
+
+void init_best_rota()
+{
+    interacoes();
 }

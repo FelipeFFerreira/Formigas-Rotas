@@ -9,7 +9,7 @@ int main()
     printf("Algoritmo de otimiazacao de rota baseado em colonia de Formigas!\n\n");
     init_agentes();
     init_mapa();
-    interacoes();
+    init_best_rota();
     //teste_escolha_rotas_agentes();
     print_rota_agentes();
     return 0;
