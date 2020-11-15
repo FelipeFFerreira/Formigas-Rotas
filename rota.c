@@ -44,7 +44,6 @@ void teste_escolha_rotas_agentes()
     for(i = 0; i < QTD_AGENTES; i++) {
         printf("------------------------------------------------------------\n");
         printf("Agente %d\n", agentes[i].id);
-        printf("Total %lf\n", agentes[i].lst_aux->dado.dis);
         dlst_print_cresc(agentes[i].lst_aux);
         printf("Best Rota = %d\n", lst_pop_get(agentes[i].rota)->dado);
         printf("------------------------------------------------------------\n\n");
@@ -56,16 +55,12 @@ void teste_escolha_rotas_agentes()
 
 void distancia(Formiga * f, mapa * pos_atual, mapa * pos_comparacao)
 {
-    int dado = f->id;
-    int dado_comp = pos_comparacao->dado;
-    int pos_atual_ = pos_atual->dado;
     possibilidades possib_aux;
     unsigned int lin = sqrt(pow((pos_atual->linha - pos_comparacao->linha), 2));
     unsigned int col = sqrt(pow((pos_atual->col - pos_comparacao->col), 2));
     possib_aux.m = pos_comparacao;
-    double dis =  (double)pow((lin + col) * 1, 1);
-    possib_aux.dis = (pos_comparacao->dado == 25) ? 1.0 / 1000.0 : dis;
-    possib_aux.txy = (double)(1.0 / ((double)possib_aux.dis) * pos_comparacao->feromonio);
+    possib_aux.dis = (double)pow((lin + col) * 1, 1) + 1;
+    possib_aux.txy = 1.0 / possib_aux.dis * pos_comparacao->feromonio;
     dlst_inserir(f->lst_aux, possib_aux);
 }
 
