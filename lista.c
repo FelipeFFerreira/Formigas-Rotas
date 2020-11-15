@@ -35,14 +35,23 @@ void lst_ins(lst_ptr * l, lst_info val)
 
 void lst_print(lst_ptr l)
 {
-    printf("[ ");
     while (l != NULL) {
-        printf("%d.[%d,%d],", l->dado->dado,
-               l->dado-> linha,
-               l->dado->col);
-        l = l->prox;
+        if(l->dado->dado != 25 && l->dado->dado != 12) {
+            printf("%d.[%d,%d],",
+                l->dado->dado,
+                l->dado-> linha,
+                l->dado->col);
+            l = l->prox;
+            printf("\n");
+        }else {
+             printf("[%d].[%d,%d],",
+                l->dado->dado,
+                l->dado-> linha,
+                l->dado->col);
+                l = l->prox;
+                printf("\n");
+        }
     }
-    printf("\b ]\n");
 }
 
 void lst_kill(lst_ptr * l)

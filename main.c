@@ -10,7 +10,7 @@ int main()
     init_agentes();
     init_mapa();
     interacoes();
-    teste_escolha_rotas_agentes();
-    exit(1);
+    //teste_escolha_rotas_agentes();
+    print_rota_agentes();
     return 0;
 }

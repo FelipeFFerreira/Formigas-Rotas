@@ -50,6 +50,16 @@ void teste_escolha_rotas_agentes()
     }
 }
 
+void print_rota_agentes()
+{
+    int i;
+    for(i = 0; i < QTD_AGENTES; i++) {
+        printf("------------------------------------------------------------\n");
+        printf("Agente %d\n", agentes[i].id);
+        lst_print(agentes[i].rota);
+        printf("------------------------------------------------------------\n");
+    }
+}
 
 /*********Funcoes Privadas**************/
 
@@ -69,7 +79,7 @@ mapa * best_decisao(Formiga f)
     double n = rand() / (double)RAND_MAX;
     dlst_ptr p = f.lst_aux->prox;
     while(p != f.lst_aux) {
-        if(n > p->dado.fx_roleta.inf && n < p->dado.fx_roleta.sup) return p->dado.m;
+        if(n > p->dado.fx_roleta.inf && n <= p->dado.fx_roleta.sup) return p->dado.m;
         p = p->prox;
     }
     return NULL;
@@ -101,16 +111,17 @@ void roleta(Formiga f)
 void interacoes()
 {
     int i;
-    mapa * pos_atual;
-    mapa * pos_comparacao = &inicio_;
-    bool flag_init = false;
     for(i = 0; i < QTD_AGENTES; i++){
+        bool flag_init = false;
+        mapa * pos_atual;
+        mapa * pos_comparacao = &inicio_;
         while(true) {
             pos_atual = lst_pop_get(agentes[i].rota);
-            if(!flag_init && pos_atual == &inicio_) {
+            int pos_atual_debug = pos_atual->dado;
+            if(!flag_init && pos_atual->dado == inicio_.dado) {
                 pos_comparacao = &final;
                 flag_init = true;
-            } else if(flag_init && pos_atual == &final)break;
+            } else if(flag_init && pos_atual->dado == final.dado)break;
 
             if(!(pos_atual->linha - 1 < 0))
                 distancia(agentes[i], pos_comparacao, &matriz[pos_atual->linha - 1][pos_atual->col]);
@@ -123,7 +134,8 @@ void interacoes()
 
             roleta(agentes[i]);
             lst_ins(&agentes[i].rota, best_decisao(agentes[i]));
-            break;
+            dlst_kill(agentes[i].lst_aux);
+            //break;
         }
     }
 }

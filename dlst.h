@@ -25,4 +25,6 @@ void dlst_inserir(dlst_ptr, dlst_info);
 
 void dlst_print_cresc(dlst_ptr l);
 
+void dlst_kill(dlst_ptr l);
+
 #endif // _DLST_H
