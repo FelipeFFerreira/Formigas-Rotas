@@ -53,7 +53,7 @@ void teste_escolha_rotas_agentes()
 
 /*********Funcoes Privadas**************/
 
-void distancia(Formiga * f, mapa * pos_atual, mapa * pos_comparacao)
+void distancia(Formiga f, mapa * pos_atual, mapa * pos_comparacao)
 {
     possibilidades possib_aux;
     unsigned int lin = sqrt(pow((pos_atual->linha - pos_comparacao->linha), 2));
@@ -61,7 +61,7 @@ void distancia(Formiga * f, mapa * pos_atual, mapa * pos_comparacao)
     possib_aux.m = pos_comparacao;
     possib_aux.dis = (double)pow((lin + col) * 1, 1) + 1;
     possib_aux.txy = 1.0 / possib_aux.dis * pos_comparacao->feromonio;
-    dlst_inserir(f->lst_aux, possib_aux);
+    dlst_inserir(f.lst_aux, possib_aux);
 }
 
 mapa * best_decisao(Formiga f)
@@ -75,24 +75,24 @@ mapa * best_decisao(Formiga f)
     return NULL;
 }
 
-double calc_notas_totais_possibilidades(Formiga * f)
+double calc_notas_totais_possibilidades(Formiga f)
 {
-    dlst_ptr l = f->lst_aux->prox;
+    dlst_ptr l = f.lst_aux->prox;
     double nota_total = 0;
-     while(l != f->lst_aux) {
+     while(l != f.lst_aux) {
         nota_total +=  l->dado.txy;
         l = l->prox;
      }
      return nota_total;
 }
 
-void roleta(Formiga * f)
+void roleta(Formiga f)
 {
-    dlst_ptr l_inicio = f->lst_aux->prox;
+    dlst_ptr l_inicio = f.lst_aux->prox;
     double soma_pesos = calc_notas_totais_possibilidades(f);
-    while(l_inicio != f->lst_aux) {
+    while(l_inicio != f.lst_aux) {
         l_inicio->dado.fx_roleta.poc_xy = l_inicio->dado.txy / soma_pesos;
-        l_inicio->dado.fx_roleta.inf = l_inicio == f->lst_aux->prox ? 0 : l_inicio->ant->dado.fx_roleta.sup;
+        l_inicio->dado.fx_roleta.inf = l_inicio == f.lst_aux->prox ? 0 : l_inicio->ant->dado.fx_roleta.sup;
         l_inicio->dado.fx_roleta.sup = l_inicio->dado.fx_roleta.inf + l_inicio->dado.fx_roleta.poc_xy;
         l_inicio =  l_inicio->prox;
     }
@@ -113,15 +113,15 @@ void interacoes()
             } else if(flag_init && pos_atual == &final)break;
 
             if(!(pos_atual->linha - 1 < 0))
-                distancia(&agentes[i], pos_comparacao, &matriz[pos_atual->linha - 1][pos_atual->col]);
+                distancia(agentes[i], pos_comparacao, &matriz[pos_atual->linha - 1][pos_atual->col]);
             if(pos_atual->linha != LIN - 1)
-                distancia(&agentes[i], pos_comparacao, &matriz[pos_atual->linha + 1][pos_atual->col]);
+                distancia(agentes[i], pos_comparacao, &matriz[pos_atual->linha + 1][pos_atual->col]);
             if(!(pos_atual->col - 1 < 0))
-                distancia(&agentes[i], pos_comparacao, &matriz[pos_atual->linha][pos_atual->col - 1]);
+                distancia(agentes[i], pos_comparacao, &matriz[pos_atual->linha][pos_atual->col - 1]);
             if(pos_atual->col != COL - 1)
-                distancia(&agentes[i], pos_comparacao, &matriz[pos_atual->linha][pos_atual->col + 1]);
+                distancia(agentes[i], pos_comparacao, &matriz[pos_atual->linha][pos_atual->col + 1]);
 
-            roleta(&agentes[i]);
+            roleta(agentes[i]);
             lst_ins(&agentes[i].rota, best_decisao(agentes[i]));
             break;
         }

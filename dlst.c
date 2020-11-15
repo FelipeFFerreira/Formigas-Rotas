@@ -54,3 +54,13 @@ void dlst_print_cresc(dlst_ptr l)
     printf("\n");
 }
 
+void dlst_kill(dlst_ptr l)
+{
+    dlst_ptr p = l->prox, q;
+    while(p != l) {
+        q = p;
+        p = p->prox;
+        free(q);
+    }
+    l->prox = l->ant = l;
+}
