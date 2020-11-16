@@ -109,6 +109,27 @@ static void roleta(Formiga f)
     }
 }
 
+static lst_ptr_cbc best_agente()
+{
+    int i;
+    Formiga best_formiga = agentes[0];
+    for(i = 1; i < QTD_AGENTES; i++) {
+        if(best_formiga.rota->size > agentes[i].rota->size)
+            best_formiga = agentes[i];
+    }
+    printf("\nBest Agente: %d, Nota: %d\n", best_formiga.id, best_formiga.rota->size);
+    return best_formiga.rota;
+}
+
+static void aplicar_feromonio(lst_ptr_cbc l)
+{
+    lst_ptr p = l->prox;
+    while(p != l) {
+        p->dado->feromonio += FEROMONIO * 2;
+        p = p->prox;
+    }
+}
+
 static void interacoes()
 {
     int i;
@@ -138,6 +159,7 @@ static void interacoes()
             //break;
         }
     }
+    aplicar_feromonio(best_agente());
 }
 
 /*******Funcoes Publicas***********/
