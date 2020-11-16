@@ -62,6 +62,14 @@ void print_rota_agentes()
     }
 }
 
+void print_mapa()
+{
+    int i, j;
+    for(i = 0; i < LIN; i++) {
+        for(j = 0; j < COL; j++)
+        printf("%d.[%d][%d], F: %lf\n", matriz[i][j].dado, matriz[i][j].linha, matriz[i][j].col, matriz[i][j].feromonio);
+    }
+}
 /*********Funcoes Privadas**************/
 
 static void distancia(Formiga f, mapa * pos_atual, mapa * pos_comparacao)
@@ -125,7 +133,7 @@ static void atualiza_feromonio(lst_ptr_cbc l)
 {
     lst_ptr p = l->prox;
     while(p != l) {
-        p->dado->feromonio += FEROMONIO * 2;
+        p->dado->feromonio += 0.1;
         p = p->prox;
     }
 }

@@ -12,5 +12,6 @@ int main()
     init_best_rota();
     //teste_escolha_rotas_agentes();
     print_rota_agentes();
+    print_mapa();
     return 0;
 }
