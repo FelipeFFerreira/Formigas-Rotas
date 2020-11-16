@@ -8,7 +8,7 @@
 1605545484 c:\github\formigasrotas\rota.h
 	<stdbool.h>
 
-1605545217 source:c:\github\formigasrotas\lista.c
+1605546143 source:c:\github\formigasrotas\lista.c
 	"lista.h"
 	<stdlib.h>
 	<stdio.h>
@@ -17,7 +17,7 @@
 	<stdbool.h>
 	"rota.h"
 
-1605544544 source:c:\github\formigasrotas\rota.c
+1605545810 source:c:\github\formigasrotas\rota.c
 	<stdlib.h>
 	<math.h>
 	<time.h>

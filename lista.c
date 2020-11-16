@@ -13,7 +13,7 @@ void lst_init(lst_ptr_cbc * l)
         exit(1);
     }
     (*l)->size = 0;
-    (*l)->prox = (*l)->ant = *l;
+    (*l)->prox = (*l)->ant = (lst_ptr)*l;
 }
 
 void lst_ins(lst_ptr_cbc l, lst_info val)
@@ -25,22 +25,22 @@ void lst_ins(lst_ptr_cbc l, lst_info val)
     }
     n->dado = val;
     l->size++;
-    if (l->prox == l) {
+    if (l->prox == (lst_ptr)l) {
        l->prox = n;
-       n->ant = l;
+       n->ant = (lst_ptr)l;
     }
     else {
         l->ant->prox = n;
         n->ant = l->ant;
     }
-     n->prox = l;
+     n->prox = (lst_ptr)l;
      l->ant = n;
 }
 
 void lst_print(lst_ptr_cbc l)
 {
     lst_ptr p = l->prox;
-    while (p != l) {
+    while (p != (lst_ptr)l) {
         if(p->dado->dado != 25 && p->dado->dado != 12) {
             printf("%d.[%d,%d],",
                 p->dado->dado,
@@ -62,19 +62,18 @@ void lst_print(lst_ptr_cbc l)
 void lst_kill(lst_ptr_cbc l)
 {
 	lst_ptr p, q = l->prox;
-	while (l != q) {
+	while (q != (lst_ptr)l) {
 		p = q;
 		q = q->prox;
 		free(p);
 	}
 }
 
-
 int lst_occurs(lst_ptr_cbc l, lst_info x)
 {
     lst_ptr p = l->prox;
 	int cont = 0;
-	while (p != l) {
+	while (p != (lst_ptr)l) {
 		if(p->dado->dado == x->dado)
             cont++;
 		p = p->prox;
@@ -88,7 +87,7 @@ lst_ptr_cbc lst_distinct(lst_ptr_cbc l)
     lst_ptr p = l->prox;
     lst_ptr_cbc lst_aux;
     lst_init(&lst_aux);
-    while(p != l) {
+    while(p != (lst_ptr)l) {
         if(!lst_occurs(lst_aux, p->dado))
             lst_ins(lst_aux, p->dado);
         p = p->prox;

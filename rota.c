@@ -70,7 +70,7 @@ void print_mapa()
         printf("%d.[%d][%d], F: %lf\n", matriz[i][j].dado, matriz[i][j].linha, matriz[i][j].col, matriz[i][j].feromonio);
     }
 }
-/*********Funcoes Privadas**************/
+/*****************************Funcoes Privadas****************************************************/
 
 static void distancia(Formiga f, mapa * pos_atual, mapa * pos_comparacao)
 {
@@ -144,7 +144,7 @@ static void atualiza_feromonio(lst_ptr_cbc l)
     lst_ptr_cbc q = lst_distinct(l);
     lst_ptr p = q->prox;
     evaporar_feromonio();
-    while(p != q) {
+    while(p != (lst_ptr)q) {
         p->dado->feromonio += FEROMONIO;
         p = p->prox;
     }
