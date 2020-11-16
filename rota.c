@@ -57,6 +57,7 @@ void print_rota_agentes()
         printf("------------------------------------------------------------\n");
         printf("Agente %d\n", agentes[i].id);
         lst_print(agentes[i].rota);
+        //printf("Nota: %d\n", lst_size(agentes[i].rota));
         printf("------------------------------------------------------------\n");
     }
 }
@@ -132,7 +133,7 @@ static void interacoes()
                 distancia(agentes[i], pos_comparacao, &matriz[pos_atual->linha][pos_atual->col + 1]);
 
             roleta(agentes[i]);
-            lst_ins(&agentes[i].rota, best_decisao(agentes[i]));
+            lst_ins(agentes[i].rota, best_decisao(agentes[i]));
             dlst_kill(agentes[i].lst_aux);
             //break;
         }
@@ -160,7 +161,7 @@ void init_mapa()
             matriz[i][j].linha = i;
             matriz[i][j].col = j;
             matriz[i][j].feromonio = FEROMONIO;
-            lst_ins(&agentes[cont].rota, &matriz[i][j]);
+            lst_ins(agentes[cont].rota, &matriz[i][j]);
             cont += 1;
         }
     }

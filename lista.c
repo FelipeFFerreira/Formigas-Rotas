@@ -8,61 +8,61 @@
 
 void lst_init(lst_ptr * l)
 {
-    *l = NULL;
+    if((*l = (lst_ptr) malloc(sizeof(struct lst_no))) == NULL) {
+        fprintf(stderr, "Erro de alocacao de memoria!\n");
+        exit(1);
+    }
+    (*l)->prox = *l;
 }
 
-void lst_ins(lst_ptr * l, lst_info val)
+void lst_ins(lst_ptr l, lst_info val)
 {
-    static int i = 0;
     lst_ptr n;
     if ((n = (lst_ptr) malloc(sizeof(struct lst_no))) == NULL) {
         fprintf(stderr, "Erro de alocacao de memoria!\n");
         exit(1);
     }
     n->dado = val;
-    if (*l == NULL) {
-       n->prox = *l;
-       *l = n;
+    if (l->prox == l) {
+       l->prox = n;
+       n->ant = l;
     }
     else {
-        lst_ptr p = *l;
-        while (p->prox != NULL) {
-            p = p->prox;
-        }
-        n->prox = p->prox;
-        p->prox = n;
+        l->ant->prox = n;
+        n->ant = l->ant;
     }
-
-    i = i >= 1 ? 0 : i + 1;
+     n->prox = l;
+     l->ant = n;
 }
 
 void lst_print(lst_ptr l)
 {
-    while (l != NULL) {
-        if(l->dado->dado != 25 && l->dado->dado != 12) {
+    lst_ptr p = l->prox;
+    while (p != l) {
+        if(p->dado->dado != 25 && p->dado->dado != 12) {
             printf("%d.[%d,%d],",
-                l->dado->dado,
-                l->dado-> linha,
-                l->dado->col);
-            l = l->prox;
+                p->dado->dado,
+                p->dado-> linha,
+                p->dado->col);
+            p = p->prox;
             printf("\n");
         }else {
              printf("[%d].[%d,%d],",
-                l->dado->dado,
-                l->dado-> linha,
-                l->dado->col);
-                l = l->prox;
+                p->dado->dado,
+                p->dado-> linha,
+                p->dado->col);
+                p = p->prox;
                 printf("\n");
         }
     }
 }
 
-void lst_kill(lst_ptr * l)
+void lst_kill(lst_ptr l)
 {
-	lst_ptr p;
-	while (*l != NULL) {
-		p = *l;
-		*l = (*l)->prox;
+	lst_ptr p, q = l->prox;
+	while (l != q) {
+		p = q;
+		q = q->prox;
 		free(p);
 	}
 }
@@ -92,8 +92,5 @@ int lst_size(lst_ptr l)
 
 lst_info lst_pop_get(lst_ptr l)
 {
-    while(l->prox != NULL) {
-        l = l->prox;
-    }
-    return l->dado;
+    return l->ant->dado;
 }
