@@ -121,7 +121,7 @@ static lst_ptr_cbc best_agente()
     return best_formiga.rota;
 }
 
-static void aplicar_feromonio(lst_ptr_cbc l)
+static void atualiza_feromonio(lst_ptr_cbc l)
 {
     lst_ptr p = l->prox;
     while(p != l) {
@@ -159,7 +159,7 @@ static void interacoes()
             //break;
         }
     }
-    aplicar_feromonio(best_agente());
+    atualiza_feromonio(best_agente());
 }
 
 /*******Funcoes Publicas***********/
