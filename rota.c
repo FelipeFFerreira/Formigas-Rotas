@@ -129,12 +129,23 @@ static lst_ptr_cbc best_agente()
     return best_formiga.rota;
 }
 
+static void evaporar_feromonio()
+{
+    int i, j;
+    for(i = 0; i < LIN; i++)
+        for(j = 0; j < COL; j++) {
+            matriz[i][j].feromonio = (matriz[i][j].feromonio - EVAP_FEROMONIO) < 0 ?
+             0 : (matriz[i][j].feromonio - EVAP_FEROMONIO) ;
+    }
+}
+
 static void atualiza_feromonio(lst_ptr_cbc l)
 {
     lst_ptr_cbc q = lst_distinct(l);
     lst_ptr p = q->prox;
+    evaporar_feromonio();
     while(p != q) {
-        p->dado->feromonio += 0.1;
+        p->dado->feromonio += FEROMONIO;
         p = p->prox;
     }
 }
