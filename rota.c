@@ -131,8 +131,9 @@ static lst_ptr_cbc best_agente()
 
 static void atualiza_feromonio(lst_ptr_cbc l)
 {
-    lst_ptr p = l->prox;
-    while(p != l) {
+    lst_ptr_cbc q = lst_distinct(l);
+    lst_ptr p = q->prox;
+    while(p != q) {
         p->dado->feromonio += 0.1;
         p = p->prox;
     }

@@ -41,4 +41,7 @@ lst_info lst_pop_get(lst_ptr_cbc);
 
 int lst_size(lst_ptr_cbc l);
 
+lst_ptr_cbc lst_distinct(lst_ptr_cbc l);
+
+
 #endif

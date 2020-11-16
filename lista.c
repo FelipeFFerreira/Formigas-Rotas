@@ -69,20 +69,33 @@ void lst_kill(lst_ptr_cbc l)
 	}
 }
 
-/*
+
 int lst_occurs(lst_ptr_cbc l, lst_info x)
 {
+    lst_ptr p = l->prox;
 	int cont = 0;
-	while (l != NULL && l->dado < x) {
-		l = l->prox;
+	while (p != l) {
+		if(p->dado->dado == x->dado)
+            cont++;
+		p = p->prox;
 	}
-	while (l != NULL && l->dado == x) {
-		cont++;
-		l = l->prox;
-	}
-	return cont;
+
+	return cont > 0;
 }
-*/
+
+lst_ptr_cbc lst_distinct(lst_ptr_cbc l)
+{
+    lst_ptr p = l->prox;
+    lst_ptr_cbc lst_aux;
+    lst_init(&lst_aux);
+    while(p != l) {
+        if(!lst_occurs(lst_aux, p->dado))
+            lst_ins(lst_aux, p->dado);
+        p = p->prox;
+    }
+
+    return lst_aux;
+}
 
 int lst_size(lst_ptr_cbc l)
 {
