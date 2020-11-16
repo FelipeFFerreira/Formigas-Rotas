@@ -6,16 +6,17 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-void lst_init(lst_ptr * l)
+void lst_init(lst_ptr_cbc * l)
 {
-    if((*l = (lst_ptr) malloc(sizeof(struct lst_no))) == NULL) {
+    if((*l = (lst_ptr_cbc) malloc(sizeof(struct lst_no_cabeca))) == NULL) {
         fprintf(stderr, "Erro de alocacao de memoria!\n");
         exit(1);
     }
-    (*l)->prox = *l;
+    (*l)->size = 0;
+    (*l)->prox = (*l)->ant = *l;
 }
 
-void lst_ins(lst_ptr l, lst_info val)
+void lst_ins(lst_ptr_cbc l, lst_info val)
 {
     lst_ptr n;
     if ((n = (lst_ptr) malloc(sizeof(struct lst_no))) == NULL) {
@@ -23,6 +24,7 @@ void lst_ins(lst_ptr l, lst_info val)
         exit(1);
     }
     n->dado = val;
+    l->size++;
     if (l->prox == l) {
        l->prox = n;
        n->ant = l;
@@ -35,7 +37,7 @@ void lst_ins(lst_ptr l, lst_info val)
      l->ant = n;
 }
 
-void lst_print(lst_ptr l)
+void lst_print(lst_ptr_cbc l)
 {
     lst_ptr p = l->prox;
     while (p != l) {
@@ -57,7 +59,7 @@ void lst_print(lst_ptr l)
     }
 }
 
-void lst_kill(lst_ptr l)
+void lst_kill(lst_ptr_cbc l)
 {
 	lst_ptr p, q = l->prox;
 	while (l != q) {
@@ -67,7 +69,8 @@ void lst_kill(lst_ptr l)
 	}
 }
 
-int lst_occurs(lst_ptr l, lst_info x)
+/*
+int lst_occurs(lst_ptr_cbc l, lst_info x)
 {
 	int cont = 0;
 	while (l != NULL && l->dado < x) {
@@ -79,18 +82,14 @@ int lst_occurs(lst_ptr l, lst_info x)
 	}
 	return cont;
 }
+*/
 
-int lst_size(lst_ptr l)
+int lst_size(lst_ptr_cbc l)
 {
-	int cont = 0;
-	while (l != NULL) {
-		cont++;
-		l = l->prox;
-	}
-	return cont;
+	return l->size;
 }
 
-lst_info lst_pop_get(lst_ptr l)
+lst_info lst_pop_get(lst_ptr_cbc l)
 {
     return l->ant->dado;
 }

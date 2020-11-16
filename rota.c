@@ -10,7 +10,7 @@
 typedef struct
 {
     int id;
-    lst_ptr rota;
+    lst_ptr_cbc rota;
     dlst_ptr lst_aux ;
 }Formiga;
 
@@ -57,7 +57,7 @@ void print_rota_agentes()
         printf("------------------------------------------------------------\n");
         printf("Agente %d\n", agentes[i].id);
         lst_print(agentes[i].rota);
-        //printf("Nota: %d\n", lst_size(agentes[i].rota));
+        printf("Nota: %d\n", lst_size(agentes[i].rota));
         printf("------------------------------------------------------------\n");
     }
 }

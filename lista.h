@@ -17,18 +17,28 @@ struct lst_no {
     lst_ptr ant;
 };
 
+typedef struct lst_no_cabeca * lst_ptr_cbc;
+struct lst_no_cabeca {
+    int size;
+    lst_ptr prox;
+    lst_ptr ant;
+};
+
+
 /* inicializa a lista*/
-void lst_init(lst_ptr *);
+void lst_init(lst_ptr_cbc *);
 
 /* insere um novo elemento na lista*/
-void lst_ins(lst_ptr, lst_info);
+void lst_ins(lst_ptr_cbc, lst_info);
 
 /* imprime os elementos da lista*/
-void lst_print(lst_ptr);
+void lst_print(lst_ptr_cbc);
 
 /* destrói uma lista*/
-void lst_kill(lst_ptr);
+void lst_kill(lst_ptr_cbc);
 
-lst_info lst_pop_get(lst_ptr);
+lst_info lst_pop_get(lst_ptr_cbc);
+
+int lst_size(lst_ptr_cbc l);
 
 #endif
