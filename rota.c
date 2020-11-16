@@ -152,34 +152,36 @@ static void atualiza_feromonio(lst_ptr_cbc l)
 
 static void interacoes()
 {
-    int i;
-    for(i = 0; i < QTD_AGENTES; i++){
-        bool flag_init = false;
-        mapa * pos_atual;
-        mapa * pos_comparacao = &inicio_;
-        while(true) {
-            pos_atual = lst_pop_get(agentes[i].rota);
-            if(!flag_init && pos_atual->dado == inicio_.dado) {
-                pos_comparacao = &final;
-                flag_init = true;
-            } else if(flag_init && pos_atual->dado == final.dado)break;
+    int i, k;
+    for(k = 0; k < 2; k++) {
+        for(i = 0; i < QTD_AGENTES; i++){
+            bool flag_init = false;
+            mapa * pos_atual;
+            mapa * pos_comparacao = &inicio_;
+            while(true) {
+                pos_atual = lst_pop_get(agentes[i].rota);
+                if(!flag_init && pos_atual->dado == inicio_.dado) {
+                    pos_comparacao = &final;
+                    flag_init = true;
+                } else if(flag_init && pos_atual->dado == final.dado)break;
 
-            if(!(pos_atual->linha - 1 < 0))
-                distancia(agentes[i], pos_comparacao, &matriz[pos_atual->linha - 1][pos_atual->col]);
-            if(pos_atual->linha != LIN - 1)
-                distancia(agentes[i], pos_comparacao, &matriz[pos_atual->linha + 1][pos_atual->col]);
-            if(!(pos_atual->col - 1 < 0))
-                distancia(agentes[i], pos_comparacao, &matriz[pos_atual->linha][pos_atual->col - 1]);
-            if(pos_atual->col != COL - 1)
-                distancia(agentes[i], pos_comparacao, &matriz[pos_atual->linha][pos_atual->col + 1]);
+                if(!(pos_atual->linha - 1 < 0))
+                    distancia(agentes[i], pos_comparacao, &matriz[pos_atual->linha - 1][pos_atual->col]);
+                if(pos_atual->linha != LIN - 1)
+                    distancia(agentes[i], pos_comparacao, &matriz[pos_atual->linha + 1][pos_atual->col]);
+                if(!(pos_atual->col - 1 < 0))
+                    distancia(agentes[i], pos_comparacao, &matriz[pos_atual->linha][pos_atual->col - 1]);
+                if(pos_atual->col != COL - 1)
+                    distancia(agentes[i], pos_comparacao, &matriz[pos_atual->linha][pos_atual->col + 1]);
 
-            roleta(agentes[i]);
-            lst_ins(agentes[i].rota, best_decisao(agentes[i]));
-            dlst_kill(agentes[i].lst_aux);
-            //break;
+                roleta(agentes[i]);
+                lst_ins(agentes[i].rota, best_decisao(agentes[i]));
+                dlst_kill(agentes[i].lst_aux);
+                //break;
+            }
         }
+        atualiza_feromonio(best_agente());
     }
-    atualiza_feromonio(best_agente());
 }
 
 /*******Funcoes Publicas***********/
