@@ -88,11 +88,11 @@ static mapa * best_decisao(Formiga f)
     faixas_roleta fx_debug;
     int ultima_pos = lst_pop_get(f.rota)->dado;
     //double n = rand() / (double)RAND_MAX;
-    double n = 1.0;
+    double n = 0.999;
     dlst_ptr p = f.lst_aux->prox;
     while(p != f.lst_aux) {
         fx_debug = p->dado.fx_roleta;
-        if((n > p->dado.fx_roleta.inf || n == 0) && n <= p->dado.fx_roleta.sup) return p->dado.m;
+        if((n > p->dado.fx_roleta.inf || n == 0) && n <= p->dado.fx_roleta.sup ) return p->dado.m;
         p = p->prox;
     }
     printf("!!!!!! DEVOLVI NULL n = %lf !!!!!!\n", n);
@@ -195,7 +195,7 @@ static void interacoes()
                     distancia(agentes[i], pos_comparacao, &matriz[pos_atual->linha][pos_atual->col - 1]);
                 if(pos_atual->col != COL - 1)
                     distancia(agentes[i], pos_comparacao, &matriz[pos_atual->linha][pos_atual->col + 1]);
-                if(pos_atual_i == 13)dlst_print_cresc(agentes[i].lst_aux);
+                //if(pos_atual_i == 13)dlst_print_cresc(agentes[i].lst_aux);
                 roleta(agentes[i]);
                 lst_ins(agentes[i].rota, best_decisao(agentes[i]));
                 dlst_kill(agentes[i].lst_aux);
