@@ -67,6 +67,8 @@ void lst_kill(lst_ptr_cbc l)
 		q = q->prox;
 		free(p);
 	}
+    l->prox = l->ant = (lst_ptr)l;
+	l->size = 0;
 }
 
 int lst_occurs(lst_ptr_cbc l, lst_info x)

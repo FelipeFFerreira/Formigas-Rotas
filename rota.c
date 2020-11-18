@@ -85,12 +85,16 @@ static void distancia(Formiga f, mapa * pos_atual, mapa * pos_comparacao)
 
 static mapa * best_decisao(Formiga f)
 {
+    faixas_roleta fx_debug;
     double n = rand() / (double)RAND_MAX;
     dlst_ptr p = f.lst_aux->prox;
     while(p != f.lst_aux) {
-        if(n > p->dado.fx_roleta.inf && n <= p->dado.fx_roleta.sup) return p->dado.m;
+        if((n > p->dado.fx_roleta.inf || n == 0) && n <= p->dado.fx_roleta.sup) return p->dado.m;
+        fx_debug = p->dado.fx_roleta;
         p = p->prox;
     }
+    printf("!!!!!! DEVOLVI NULL n = %lf !!!!!!\n", n);
+    printf("Faixas da Roleta Linf: %lf, LiSup: %lf\n", fx_debug.inf, fx_debug.sup);
     return NULL;
 }
 
@@ -108,11 +112,13 @@ static double calc_notas_totais_possibilidades(Formiga f)
 static void roleta(Formiga f)
 {
     dlst_ptr l_inicio = f.lst_aux->prox;
+    faixas_roleta faixas;
     double soma_pesos = calc_notas_totais_possibilidades(f);
     while(l_inicio != f.lst_aux) {
         l_inicio->dado.fx_roleta.poc_xy = l_inicio->dado.txy / soma_pesos;
-        l_inicio->dado.fx_roleta.inf = l_inicio == f.lst_aux->prox ? 0 : l_inicio->ant->dado.fx_roleta.sup;
+        l_inicio->dado.fx_roleta.inf = l_inicio == f.lst_aux->prox ? 0.0 : l_inicio->ant->dado.fx_roleta.sup;
         l_inicio->dado.fx_roleta.sup = l_inicio->dado.fx_roleta.inf + l_inicio->dado.fx_roleta.poc_xy;
+        faixas = l_inicio->dado.fx_roleta;
         l_inicio =  l_inicio->prox;
     }
 }
@@ -139,13 +145,25 @@ static void evaporar_feromonio()
     }
 }
 
+static void kill_rota_agentes()
+{
+    int i, j, k = 0;
+    for (i = 0; i < QTD_AGENTES; i++)
+        lst_kill(agentes[i].rota);
+    for (i = 0; i < LIN; i++)
+            for (j = 0; j < COL; j++) {
+                lst_ins(agentes[k].rota, &matriz[i][j]);
+                k++;
+            }
+}
+
 static void atualiza_feromonio(lst_ptr_cbc l)
 {
     lst_ptr_cbc q = lst_distinct(l);
     lst_ptr p = q->prox;
     evaporar_feromonio();
     while(p != (lst_ptr)q) {
-        p->dado->feromonio += FEROMONIO;
+        //p->dado->feromonio += FEROMONIO;
         p = p->prox;
     }
 }
@@ -153,13 +171,15 @@ static void atualiza_feromonio(lst_ptr_cbc l)
 static void interacoes()
 {
     int i, k;
-    for(k = 0; k < 2; k++) {
+    for(k = 0; k < INTERACOES; k++) {
+            printf("%d\n", k + 1);
         for(i = 0; i < QTD_AGENTES; i++){
             bool flag_init = false;
             mapa * pos_atual;
             mapa * pos_comparacao = &inicio_;
             while(true) {
                 pos_atual = lst_pop_get(agentes[i].rota);
+                int pos_atual_i = pos_atual->dado;
                 if(!flag_init && pos_atual->dado == inicio_.dado) {
                     pos_comparacao = &final;
                     flag_init = true;
@@ -180,7 +200,10 @@ static void interacoes()
                 //break;
             }
         }
-        atualiza_feromonio(best_agente());
+        //print_rota_agentes();
+        //print_mapa();
+        //atualiza_feromonio(best_agente());
+        kill_rota_agentes();
     }
 }
 

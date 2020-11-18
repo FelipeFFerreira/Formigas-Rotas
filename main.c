@@ -10,8 +10,7 @@ int main()
     init_agentes();
     init_mapa();
     init_best_rota();
-    //teste_escolha_rotas_agentes();
-    print_rota_agentes();
-    print_mapa();
+    //print_rota_agentes();
+    //print_mapa();
     return 0;
 }
