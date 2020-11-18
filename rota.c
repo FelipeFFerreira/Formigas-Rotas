@@ -195,7 +195,7 @@ static void interacoes()
                     distancia(agentes[i], pos_comparacao, &matriz[pos_atual->linha][pos_atual->col - 1]);
                 if(pos_atual->col != COL - 1)
                     distancia(agentes[i], pos_comparacao, &matriz[pos_atual->linha][pos_atual->col + 1]);
-
+                if(pos_atual_i == 13)dlst_print_cresc(agentes[i].lst_aux);
                 roleta(agentes[i]);
                 lst_ins(agentes[i].rota, best_decisao(agentes[i]));
                 dlst_kill(agentes[i].lst_aux);
