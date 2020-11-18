@@ -86,11 +86,12 @@ static void distancia(Formiga f, mapa * pos_atual, mapa * pos_comparacao)
 static mapa * best_decisao(Formiga f)
 {
     faixas_roleta fx_debug;
-    double n = rand() / (double)RAND_MAX;
+    //double n = rand() / (double)RAND_MAX;
+    double n = 1.0;
     dlst_ptr p = f.lst_aux->prox;
     while(p != f.lst_aux) {
-        if((n > p->dado.fx_roleta.inf || n == 0) && n <= p->dado.fx_roleta.sup) return p->dado.m;
         fx_debug = p->dado.fx_roleta;
+        if((n > p->dado.fx_roleta.inf || n == 0) && n <= p->dado.fx_roleta.sup) return p->dado.m;
         p = p->prox;
     }
     printf("!!!!!! DEVOLVI NULL n = %lf !!!!!!\n", n);
