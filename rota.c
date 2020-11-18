@@ -86,6 +86,7 @@ static void distancia(Formiga f, mapa * pos_atual, mapa * pos_comparacao)
 static mapa * best_decisao(Formiga f)
 {
     faixas_roleta fx_debug;
+    int ultima_pos = lst_pop_get(f.rota)->dado;
     //double n = rand() / (double)RAND_MAX;
     double n = 1.0;
     dlst_ptr p = f.lst_aux->prox;
@@ -162,7 +163,7 @@ static void atualiza_feromonio(lst_ptr_cbc l)
 {
     lst_ptr_cbc q = lst_distinct(l);
     lst_ptr p = q->prox;
-    evaporar_feromonio();
+    //evaporar_feromonio();
     while(p != (lst_ptr)q) {
         //p->dado->feromonio += FEROMONIO;
         p = p->prox;
