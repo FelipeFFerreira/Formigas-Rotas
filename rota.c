@@ -15,8 +15,7 @@ typedef struct
 }Formiga;
 
 /*****Variaveis Privadas******/
-static mapa inicio_ = {4, 0, 25};
-static mapa final = {1, 5, 12};
+static mapa * pos_acidente;
 static mapa matriz[LIN][COL];
 static Formiga agentes[QTD_AGENTES];
 
@@ -56,7 +55,7 @@ void print_rota_agentes()
     for(i = 0; i < QTD_AGENTES; i++) {
         printf("------------------------------------------------------------\n");
         printf("Agente %d\n", agentes[i].id);
-        //lst_print(agentes[i].rota);
+        lst_print(agentes[i].rota);
         printf("Nota: %d\n", lst_size(agentes[i].rota));
         printf("------------------------------------------------------------\n");
     }
@@ -65,10 +64,19 @@ void print_rota_agentes()
 void print_mapa()
 {
     int i, j;
+    printf("---------------------- MAPA ATUAL -------------------------------\n");
     for(i = 0; i < LIN; i++) {
         for(j = 0; j < COL; j++)
         printf("%d.[%d][%d], F: %lf\n", matriz[i][j].dado, matriz[i][j].linha, matriz[i][j].col, matriz[i][j].feromonio);
     }
+}
+
+void print_result()
+{
+    printf("---------------------- RESULTADO FINAL -------------------------------\n");
+    printf("Pos de acidente: %d.[%d][%d]\n", pos_acidente->dado, pos_acidente->linha, pos_acidente->col);
+    print_rota_agentes();
+    print_mapa();
 }
 /*****************************Funcoes Privadas****************************************************/
 
@@ -87,11 +95,26 @@ static mapa * best_decisao(Formiga f)
 {
     double n = rand() / (RAND_MAX + 1.0);
     dlst_ptr p = f.lst_aux->prox;
-    while(p != f.lst_aux) {
-        if(n >= p->dado.fx_roleta.inf && n < p->dado.fx_roleta.sup) return p->dado.m;
+    while (p != f.lst_aux) {
+        if (n >= p->dado.fx_roleta.inf && n < p->dado.fx_roleta.sup)
+            return p->dado.m;
         p = p->prox;
     }
     return NULL;
+}
+
+mapa * agente_distict()
+{
+    int i;
+    while(1) {
+        mapa * m  = &matriz[rand() % LIN][rand() % COL];
+        for (i = 0; i < QTD_AGENTES; i++) {
+            if(m->dado == agentes[i].id)
+                break;
+        }
+        if(i == QTD_AGENTES)
+            return m;
+    }
 }
 
 static double calc_notas_totais_possibilidades(Formiga f)
@@ -125,7 +148,7 @@ static lst_ptr_cbc best_agente()
         if(best_formiga.rota->size > agentes[i].rota->size)
             best_formiga = agentes[i];
     }
-    printf("\nBest Agente: %d, Nota: %d\n", best_formiga.id, best_formiga.rota->size);
+    //printf("\nBest Agente: %d, Nota: %d\n", best_formiga.id, best_formiga.rota->size);
     return best_formiga.rota;
 }
 
@@ -159,24 +182,23 @@ static void atualiza_feromonio(lst_ptr_cbc l)
 
 static mapa * drawAcidente()
 {
-    return &matriz[rand() % LIN][rand() % COL];
+    return agente_distict();
 }
 
 static void interacoes()
 {
     int i, k;
-    mapa * pos_acidente =  drawAcidente();
+    mapa * pos_comparacao = drawAcidente();
+    pos_acidente = pos_comparacao;
     for (k = 0; k < INTERACOES; k++) {
         for (i = 0; i < QTD_AGENTES; i++){
-            bool flag_init = false;
             mapa * pos_atual;
-            mapa * pos_comparacao = &inicio_;
+
             while (true) {
                 pos_atual = lst_pop_get(agentes[i].rota);
-                if (!flag_init && pos_atual->dado == inicio_.dado) {
-                    pos_comparacao = &final;
-                    flag_init = true;
-                } else if (flag_init && pos_atual->dado == final.dado)break;
+
+                if (pos_atual->dado == pos_comparacao->dado)
+                    break;
 
                 if (!(pos_atual->linha - 1 < 0))
                     distancia(agentes[i], pos_comparacao, &matriz[pos_atual->linha - 1][pos_atual->col]);
@@ -190,29 +212,19 @@ static void interacoes()
                 roleta(agentes[i]);
                 lst_ins(agentes[i].rota, best_decisao(agentes[i]));
                 dlst_kill(agentes[i].lst_aux);
-                //break;
             }
         }
-        print_rota_agentes();
-        print_mapa();
+
         atualiza_feromonio(best_agente());
-        kill_rota_agentes();
+
+        if (k == INTERACOES - 1)
+            print_result();
+        else
+            kill_rota_agentes();
     }
+
 }
 
-mapa * agente_distict()
-{
-    int i;
-    while(1) {
-        mapa * m  = &matriz[rand() % LIN][rand() % COL];
-        for (i = 0; i < QTD_AGENTES; i++) {
-            if(m->dado == agentes[i].id)
-                break;
-        }
-        if(i == QTD_AGENTES)
-            return m;
-    }
-}
 
 /*******Funcoes Publicas***********/
 
