@@ -134,73 +134,67 @@ static void evaporar_feromonio()
     int i, j;
     for(i = 0; i < LIN; i++)
         for(j = 0; j < COL; j++) {
-            matriz[i][j].feromonio = (matriz[i][j].feromonio - EVAP_FEROMONIO) < 0 ?
-             0 : (matriz[i][j].feromonio - EVAP_FEROMONIO) ;
+            matriz[i][j].feromonio = (matriz[i][j].feromonio - EVAP_FEROMONIO) <= 0 ?
+             FEROMONIO : (matriz[i][j].feromonio - EVAP_FEROMONIO) ;
     }
 }
 
 static void kill_rota_agentes()
 {
-    int i, j, k = 0;
+    int i, j;
     for (i = 0; i < QTD_AGENTES; i++)
         lst_kill(agentes[i].rota);
-    for (i = 0; i < LIN; i++)
-            for (j = 0; j < COL; j++) {
-                lst_ins(agentes[k].rota, &matriz[i][j]);
-                k++;
-            }
 }
 
 static void atualiza_feromonio(lst_ptr_cbc l)
 {
     lst_ptr_cbc q = lst_distinct(l);
     lst_ptr p = q->prox;
-    //evaporar_feromonio();
+    evaporar_feromonio();
     while(p != (lst_ptr)q) {
-        //p->dado->feromonio += FEROMONIO;
+        p->dado->feromonio += FEROMONIO;
         p = p->prox;
     }
 }
 
 static mapa * drawAcidente()
 {
-    return NULL;
+    return &matriz[rand() % LIN][rand() % COL];
 }
 
 static void interacoes()
 {
     int i, k;
     mapa * pos_acidente =  drawAcidente();
-    for(k = 0; k < INTERACOES; k++) {
-            printf("%d\n", k + 1);
-        for(i = 0; i < QTD_AGENTES; i++){
+    for (k = 0; k < INTERACOES; k++) {
+        for (i = 0; i < QTD_AGENTES; i++){
             bool flag_init = false;
             mapa * pos_atual;
             mapa * pos_comparacao = &inicio_;
-            while(true) {
+            while (true) {
                 pos_atual = lst_pop_get(agentes[i].rota);
-                if(!flag_init && pos_atual->dado == inicio_.dado) {
+                if (!flag_init && pos_atual->dado == inicio_.dado) {
                     pos_comparacao = &final;
                     flag_init = true;
-                } else if(flag_init && pos_atual->dado == final.dado)break;
+                } else if (flag_init && pos_atual->dado == final.dado)break;
 
-                if(!(pos_atual->linha - 1 < 0))
+                if (!(pos_atual->linha - 1 < 0))
                     distancia(agentes[i], pos_comparacao, &matriz[pos_atual->linha - 1][pos_atual->col]);
-                if(pos_atual->linha != LIN - 1)
+                if (pos_atual->linha != LIN - 1)
                     distancia(agentes[i], pos_comparacao, &matriz[pos_atual->linha + 1][pos_atual->col]);
-                if(!(pos_atual->col - 1 < 0))
+                if (!(pos_atual->col - 1 < 0))
                     distancia(agentes[i], pos_comparacao, &matriz[pos_atual->linha][pos_atual->col - 1]);
-                if(pos_atual->col != COL - 1)
+                if (pos_atual->col != COL - 1)
                     distancia(agentes[i], pos_comparacao, &matriz[pos_atual->linha][pos_atual->col + 1]);
-                //if(pos_atual_i == 13)dlst_print_cresc(agentes[i].lst_aux);
+
                 roleta(agentes[i]);
                 lst_ins(agentes[i].rota, best_decisao(agentes[i]));
                 dlst_kill(agentes[i].lst_aux);
                 //break;
             }
         }
-        //print_rota_agentes();
-        //print_mapa();
+        print_rota_agentes();
+        print_mapa();
         atualiza_feromonio(best_agente());
         kill_rota_agentes();
     }
@@ -211,23 +205,23 @@ static void interacoes()
 void init_agentes()
 {
     int i;
-    for(i = 0; i < QTD_AGENTES; i++){
-        agentes[i].id = i + 1;
+    for (i = 0; i < QTD_AGENTES; i++) {
         lst_init(&agentes[i].rota);
         dlst_init(&agentes[i].lst_aux);
+        lst_ins(agentes[i].rota, &matriz[rand() % LIN][rand() % COL]);
+        agentes[i].id = lst_pop_get(agentes[i].rota)->dado;
     }
 }
 
 void init_mapa()
 {
     int i, j, cont = 0;
-    for(i = 0; i < LIN; i++) {
-        for(j = 0; j < COL; j++) {
+    for (i = 0; i < LIN; i++) {
+        for (j = 0; j < COL; j++) {
             matriz[i][j].dado = cont + 1;
             matriz[i][j].linha = i;
             matriz[i][j].col = j;
             matriz[i][j].feromonio = FEROMONIO;
-            lst_ins(agentes[cont].rota, &matriz[i][j]);
             cont += 1;
         }
     }

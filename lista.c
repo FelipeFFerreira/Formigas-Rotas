@@ -61,13 +61,14 @@ void lst_print(lst_ptr_cbc l)
 
 void lst_kill(lst_ptr_cbc l)
 {
-	lst_ptr p, q = l->prox;
+	lst_ptr p, q = l->prox->prox;
 	while (q != (lst_ptr)l) {
 		p = q;
 		q = q->prox;
 		free(p);
 	}
-    l->prox = l->ant = (lst_ptr)l;
+    l->prox->prox = (lst_ptr)l;
+    l->ant = l->prox;
 	l->size = 0;
 }
 
