@@ -56,7 +56,7 @@ void print_rota_agentes()
     for(i = 0; i < QTD_AGENTES; i++) {
         printf("------------------------------------------------------------\n");
         printf("Agente %d\n", agentes[i].id);
-        lst_print(agentes[i].rota);
+        //lst_print(agentes[i].rota);
         printf("Nota: %d\n", lst_size(agentes[i].rota));
         printf("------------------------------------------------------------\n");
     }
@@ -141,7 +141,7 @@ static void evaporar_feromonio()
 
 static void kill_rota_agentes()
 {
-    int i, j;
+    int i;
     for (i = 0; i < QTD_AGENTES; i++)
         lst_kill(agentes[i].rota);
 }
@@ -200,6 +200,20 @@ static void interacoes()
     }
 }
 
+mapa * agente_distict()
+{
+    int i;
+    while(1) {
+        mapa * m  = &matriz[rand() % LIN][rand() % COL];
+        for (i = 0; i < QTD_AGENTES; i++) {
+            if(m->dado == agentes[i].id)
+                break;
+        }
+        if(i == QTD_AGENTES)
+            return m;
+    }
+}
+
 /*******Funcoes Publicas***********/
 
 void init_agentes()
@@ -208,7 +222,7 @@ void init_agentes()
     for (i = 0; i < QTD_AGENTES; i++) {
         lst_init(&agentes[i].rota);
         dlst_init(&agentes[i].lst_aux);
-        lst_ins(agentes[i].rota, &matriz[rand() % LIN][rand() % COL]);
+        lst_ins(agentes[i].rota, agente_distict());
         agentes[i].id = lst_pop_get(agentes[i].rota)->dado;
     }
 }
