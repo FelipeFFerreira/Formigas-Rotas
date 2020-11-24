@@ -162,9 +162,15 @@ static void atualiza_feromonio(lst_ptr_cbc l)
     }
 }
 
+static mapa * drawAcidente()
+{
+    return NULL;
+}
+
 static void interacoes()
 {
     int i, k;
+    mapa * pos_acidente =  drawAcidente();
     for(k = 0; k < INTERACOES; k++) {
             printf("%d\n", k + 1);
         for(i = 0; i < QTD_AGENTES; i++){
