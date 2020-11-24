@@ -15,7 +15,7 @@ typedef struct
 }Formiga;
 
 /*****Variaveis Privadas******/
-static mapa * pos_acidente;
+static mapa * pos_acidente_;
 static mapa matriz[LIN][COL];
 static Formiga agentes[QTD_AGENTES];
 
@@ -74,7 +74,9 @@ void print_mapa()
 void print_result()
 {
     printf("---------------------- RESULTADO FINAL -------------------------------\n");
-    printf("Pos de acidente: %d.[%d][%d]\n", pos_acidente->dado, pos_acidente->linha, pos_acidente->col);
+    printf("Pos de acidente: %d.[%d][%d]\n", pos_acidente_->dado,
+           pos_acidente_->linha,
+            pos_acidente_->col);
     print_rota_agentes();
     print_mapa();
 }
@@ -188,26 +190,30 @@ static mapa * drawAcidente()
 static void interacoes()
 {
     int i, k;
-    mapa * pos_comparacao = drawAcidente();
-    pos_acidente = pos_comparacao;
+    mapa * pos_acidente = drawAcidente();
+    pos_acidente_ = pos_acidente;
     for (k = 0; k < INTERACOES; k++) {
-        for (i = 0; i < QTD_AGENTES; i++){
+        for (i = 0; i < QTD_AGENTES; i++) {
             mapa * pos_atual;
 
             while (true) {
                 pos_atual = lst_pop_get(agentes[i].rota);
 
-                if (pos_atual->dado == pos_comparacao->dado)
+                if (pos_atual->dado == pos_acidente->dado)
                     break;
 
                 if (!(pos_atual->linha - 1 < 0))
-                    distancia(agentes[i], pos_comparacao, &matriz[pos_atual->linha - 1][pos_atual->col]);
+                    if (!lst_occurs(agentes[i].rota, &matriz[pos_atual->linha - 1][pos_atual->col]))
+                        distancia(agentes[i], pos_acidente, &matriz[pos_atual->linha - 1][pos_atual->col]);
                 if (pos_atual->linha != LIN - 1)
-                    distancia(agentes[i], pos_comparacao, &matriz[pos_atual->linha + 1][pos_atual->col]);
+                    if (!lst_occurs(agentes[i].rota, &matriz[pos_atual->linha + 1][pos_atual->col]))
+                        distancia(agentes[i], pos_acidente, &matriz[pos_atual->linha + 1][pos_atual->col]);
                 if (!(pos_atual->col - 1 < 0))
-                    distancia(agentes[i], pos_comparacao, &matriz[pos_atual->linha][pos_atual->col - 1]);
+                    if (!lst_occurs(agentes[i].rota, &matriz[pos_atual->linha][pos_atual->col - 1]))
+                        distancia(agentes[i], pos_acidente, &matriz[pos_atual->linha][pos_atual->col - 1]);
                 if (pos_atual->col != COL - 1)
-                    distancia(agentes[i], pos_comparacao, &matriz[pos_atual->linha][pos_atual->col + 1]);
+                    if (!lst_occurs(agentes[i].rota, &matriz[pos_atual->linha][pos_atual->col + 1]));
+                        distancia(agentes[i], pos_acidente, &matriz[pos_atual->linha][pos_atual->col + 1]);
 
                 roleta(agentes[i]);
                 lst_ins(agentes[i].rota, best_decisao(agentes[i]));

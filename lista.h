@@ -37,6 +37,8 @@ void lst_print(lst_ptr_cbc);
 /* destrói uma lista*/
 void lst_kill(lst_ptr_cbc);
 
+int lst_occurs(lst_ptr_cbc, lst_info);
+
 lst_info lst_pop_get(lst_ptr_cbc);
 
 int lst_size(lst_ptr_cbc l);
