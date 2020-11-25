@@ -1,23 +1,23 @@
 # depslib dependency file v1.0
-1606255983 source:c:\github\formigasrotas\main.c
+1606344440 source:c:\github\formigasrotas\main.c
 	<stdio.h>
 	<stdlib.h>
 	<time.h>
 	"rota.h"
 
-1606258483 c:\github\formigasrotas\rota.h
+1606344440 c:\github\formigasrotas\rota.h
 	<stdbool.h>
 
-1606260721 source:c:\github\formigasrotas\lista.c
+1606344255 source:c:\github\formigasrotas\lista.c
 	"lista.h"
 	<stdlib.h>
 	<stdio.h>
 
-1606260721 c:\github\formigasrotas\lista.h
+1606344255 c:\github\formigasrotas\lista.h
 	<stdbool.h>
 	"rota.h"
 
-1606260942 source:c:\github\formigasrotas\rota.c
+1606344440 source:c:\github\formigasrotas\rota.c
 	<stdlib.h>
 	<math.h>
 	<time.h>
