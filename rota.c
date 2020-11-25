@@ -195,6 +195,7 @@ static void interacoes()
     for (k = 0; k < INTERACOES; k++) {
         for (i = 0; i < QTD_AGENTES; i++) {
             mapa * pos_atual;
+            bool flag_init;
 
             while (true) {
                 pos_atual = lst_pop_get(agentes[i].rota);
