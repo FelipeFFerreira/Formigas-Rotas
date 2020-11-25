@@ -36,12 +36,6 @@ typedef struct
 
 /**********Funcoes Publicas***************/
 
-/*Inicializa mapa, atribui local inicial de cada k-agente*/
-void init_mapa();
-
-void init_agentes();
-
-void init_best_rota();
-
+void simulador_rotas();
 
 #endif // _ROTA_H

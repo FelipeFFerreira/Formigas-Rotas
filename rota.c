@@ -15,9 +15,11 @@ typedef struct
 }Formiga;
 
 /*****Variaveis Privadas******/
-static mapa * pos_acidente_;
+static mapa * pos_acidente;
+static mapa hospital_1 = {3, 0, 19};
+static mapa hospital_2 = {3, 5, 24};
 static mapa matriz[LIN][COL];
-static Formiga agentes[QTD_AGENTES];
+static Formiga agentes[QTD_AMBULANCIAS + QTD_HOSPITAIS];
 
 /************* Area de testes *******************/
 void print_celula_rota(mapa * m)
@@ -25,10 +27,10 @@ void print_celula_rota(mapa * m)
     printf("%d.[%d,%d]", m->dado, m->linha, m->col);
 }
 
-void teste_init_agentes()
+void teste_init_agentes(int qtd_agentes)
 {
     int i;
-    for(i = 0; i < QTD_AGENTES; i++) {
+    for(i = 0; i < qtd_agentes; i++) {
         printf("Agente %d", agentes[i].id);
         lst_print(agentes[i].rota);
         printf("pop_get ");
@@ -37,10 +39,10 @@ void teste_init_agentes()
     }
 }
 
-void teste_escolha_rotas_agentes()
+void teste_escolha_rotas_agentes(int qtd_agentes)
 {
     int i;
-    for(i = 0; i < QTD_AGENTES; i++) {
+    for(i = 0; i < qtd_agentes; i++) {
         printf("------------------------------------------------------------\n");
         printf("Agente %d\n", agentes[i].id);
         dlst_print_cresc(agentes[i].lst_aux);
@@ -49,10 +51,10 @@ void teste_escolha_rotas_agentes()
     }
 }
 
-void print_rota_agentes()
+void print_rota_agentes(int qtd_agentes)
 {
     int i;
-    for(i = 0; i < QTD_AGENTES; i++) {
+    for(i = 0; i < qtd_agentes; i++) {
         printf("------------------------------------------------------------\n");
         printf("Agente %d\n", agentes[i].id);
         lst_print(agentes[i].rota);
@@ -71,14 +73,14 @@ void print_mapa()
     }
 }
 
-void print_result()
+void print_result(int qtd_agentes)
 {
     printf("---------------------- RESULTADO FINAL -------------------------------\n");
-    printf("Pos de acidente: %d.[%d][%d]\n", pos_acidente_->dado,
-           pos_acidente_->linha,
-            pos_acidente_->col);
-    print_rota_agentes();
-    print_mapa();
+    printf("Pos de acidente: %d.[%d][%d]\n", pos_acidente->dado,
+           pos_acidente->linha,
+            pos_acidente->col);
+    print_rota_agentes(qtd_agentes);
+    print_mapa(qtd_agentes);
 }
 /*****************************Funcoes Privadas****************************************************/
 
@@ -105,16 +107,18 @@ static mapa * best_decisao(Formiga f)
     return NULL;
 }
 
-mapa * agente_distict()
+mapa * agente_distict(int qtd_agentes)
 {
     int i;
     while(1) {
         mapa * m  = &matriz[rand() % LIN][rand() % COL];
-        for (i = 0; i < QTD_AGENTES; i++) {
-            if(m->dado == agentes[i].id)
+        for (i = 0; i < qtd_agentes; i++) {
+            if (m->dado == agentes[i].id
+               || m->dado == hospital_1.dado
+               || m->dado == hospital_2.dado)
                 break;
         }
-        if(i == QTD_AGENTES)
+        if(i == qtd_agentes)
             return m;
     }
 }
@@ -142,11 +146,11 @@ static void roleta(Formiga f)
     }
 }
 
-static lst_ptr_cbc best_agente()
+static lst_ptr_cbc best_agente(int qtd_agentes)
 {
     int i;
     Formiga best_formiga = agentes[0];
-    for(i = 1; i < QTD_AGENTES; i++) {
+    for(i = 1; i < qtd_agentes; i++) {
         if(best_formiga.rota->size > agentes[i].rota->size)
             best_formiga = agentes[i];
     }
@@ -164,10 +168,10 @@ static void evaporar_feromonio()
     }
 }
 
-static void kill_rota_agentes()
+static void kill_rota_agentes(int qtd_agentes)
 {
     int i;
-    for (i = 0; i < QTD_AGENTES; i++)
+    for (i = 0; i < qtd_agentes; i++)
         lst_kill(agentes[i].rota);
 }
 
@@ -182,25 +186,20 @@ static void atualiza_feromonio(lst_ptr_cbc l)
     }
 }
 
-static mapa * drawAcidente()
+static mapa * drawAcidente(int qtd_agentes)
 {
-    return agente_distict();
+    return agente_distict(qtd_agentes);
 }
 
-static void interacoes(int qtd_agentes)
+static lst_ptr_cbc interacoes(int qtd_agentes)
 {
     int i, k;
-    mapa * pos_acidente = drawAcidente();
-    pos_acidente_ = pos_acidente;
+    lst_ptr_cbc lst_best_rota = NULL;
     for (k = 0; k < INTERACOES; k++) {
         for (i = 0; i < qtd_agentes; i++) {
-            bool flag_init = false;
-            mapa * pos_comparacao = pos_acidente;
             mapa * pos_atual;
-
             while (true) {
                 pos_atual = lst_pop_get(agentes[i].rota);
-
                 if (pos_atual->dado == pos_acidente->dado)
                     break;
 
@@ -223,26 +222,26 @@ static void interacoes(int qtd_agentes)
             }
         }
 
-        atualiza_feromonio(best_agente());
+        atualiza_feromonio(best_agente(qtd_agentes));
 
         if (k == INTERACOES - 1)
-            print_result();
+            lst_best_rota = best_agente(qtd_agentes);
         else
-            kill_rota_agentes();
+            kill_rota_agentes(qtd_agentes);
     }
 
+    return lst_best_rota;
 }
-
 
 /*******Funcoes Publicas***********/
 
 void init_agentes()
 {
     int i;
-    for (i = 0; i < QTD_AGENTES; i++) {
+    for (i = 0; i < QTD_AMBULANCIAS; i++) {
         lst_init(&agentes[i].rota);
         dlst_init(&agentes[i].lst_aux);
-        lst_ins(agentes[i].rota, agente_distict());
+        lst_ins(agentes[i].rota, agente_distict(QTD_AMBULANCIAS));
         agentes[i].id = lst_pop_get(agentes[i].rota)->dado;
     }
 }
@@ -261,18 +260,36 @@ void init_mapa()
     }
 }
 
-void best_rota_acidente()
+lst_ptr_cbc best_rota_acidente()
 {
+    lst_ptr_cbc l;
+    lst_init(&l);
     init_mapa();
     init_agentes();
-    interacoes(QTD_AMBULANCIAS);
-
+    pos_acidente = drawAcidente(QTD_AMBULANCIAS);
+    return interacoes(QTD_AMBULANCIAS);
 }
 
-void init_best_rota()
+lst_ptr_cbc best_rota_hospital()
 {
-    interacoes();
     init_mapa();
-    agentes[0].id = matriz[3][0].dado;
-    agentes[1].id = matriz[3][4].dado;
+    lst_init(&agentes[QTD_AMBULANCIAS].rota);
+    lst_init(&agentes[QTD_AMBULANCIAS + 1].rota);
+    dlst_init(&agentes[QTD_AMBULANCIAS].lst_aux);
+    dlst_init(&agentes[QTD_AMBULANCIAS + 1].lst_aux);
+    lst_ins(agentes[0].rota, &matriz[3][0]);
+    lst_ins(agentes[1].rota, &matriz[3][5]);
+    agentes[0].id = lst_pop_get(agentes[0].rota)->dado;
+    agentes[1].id = lst_pop_get(agentes[1].rota)->dado;
+    return interacoes(QTD_HOSPITAIS);
+}
+
+void simulador_rotas()
+{
+    lst_ptr_cbc l1;
+    lst_ptr_cbc l2;
+    lst_init(&l1);
+    lst_init(&l2);
+    l1 = best_rota_acidente();
+    l2 = best_rota_hospital();
 }
