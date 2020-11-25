@@ -187,13 +187,15 @@ static mapa * drawAcidente()
     return agente_distict();
 }
 
-static void interacoes()
+static void interacoes(int qtd_agentes)
 {
     int i, k;
     mapa * pos_acidente = drawAcidente();
     pos_acidente_ = pos_acidente;
     for (k = 0; k < INTERACOES; k++) {
-        for (i = 0; i < QTD_AGENTES; i++) {
+        for (i = 0; i < qtd_agentes; i++) {
+            bool flag_init = false;
+            mapa * pos_comparacao = pos_acidente;
             mapa * pos_atual;
 
             while (true) {
@@ -259,7 +261,18 @@ void init_mapa()
     }
 }
 
+void best_rota_acidente()
+{
+    init_mapa();
+    init_agentes();
+    interacoes(QTD_AMBULANCIAS);
+
+}
+
 void init_best_rota()
 {
     interacoes();
+    init_mapa();
+    agentes[0].id = matriz[3][0].dado;
+    agentes[1].id = matriz[3][4].dado;
 }

@@ -6,7 +6,8 @@
 #define COL 6
 
 #define INTERACOES 2000
-#define QTD_AGENTES 5
+#define QTD_AMBULANCIAS 4
+#define QTD_HOSPITAIS 2
 #define FEROMONIO 0.1
 #define EVAP_FEROMONIO 0.1
 
