@@ -72,7 +72,7 @@ void lst_kill(lst_ptr_cbc l)
 	l->size = 0;
 }
 
-int lst_occurs(lst_ptr_cbc l, lst_info x)
+bool lst_occurs(lst_ptr_cbc l, lst_info x)
 {
     lst_ptr p = l->prox;
 	int cont = 0;
@@ -82,7 +82,7 @@ int lst_occurs(lst_ptr_cbc l, lst_info x)
 		p = p->prox;
 	}
 
-	return cont > 0;
+	return cont > 0 ? true : false;
 }
 
 lst_ptr_cbc lst_distinct(lst_ptr_cbc l)

@@ -5,10 +5,12 @@
 
 int main()
 {
-    printf("Algoritmo de otimiazacao de rota baseado em colonia de Formigas!\n\n");
     srand((unsigned long long)time(NULL));
+    printf("Algoritmo de otimiazacao de rota baseado em colonia de Formigas!\n\n");
     init_mapa();
     init_agentes();
     init_best_rota();
+    //print_rota_agentes();
+    //print_mapa();
     return 0;
 }

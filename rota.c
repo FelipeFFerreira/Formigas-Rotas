@@ -15,7 +15,8 @@ typedef struct
 }Formiga;
 
 /*****Variaveis Privadas******/
-static mapa * pos_acidente_;
+static mapa inicio_ = {4, 0, 25};
+static mapa final = {1, 5, 12};
 static mapa matriz[LIN][COL];
 static Formiga agentes[QTD_AGENTES];
 
@@ -74,9 +75,10 @@ void print_mapa()
 void print_result()
 {
     printf("---------------------- RESULTADO FINAL -------------------------------\n");
-    printf("Pos de acidente: %d.[%d][%d]\n", pos_acidente_->dado,
-           pos_acidente_->linha,
-            pos_acidente_->col);
+    printf("Pos de acidente: %d.[%d][%d]\n",
+           inicio_.dado,
+           inicio_.linha,
+            inicio_.col);
     print_rota_agentes();
     print_mapa();
 }
@@ -190,30 +192,35 @@ static mapa * drawAcidente()
 static void interacoes()
 {
     int i, k;
-    mapa * pos_acidente = drawAcidente();
-    pos_acidente_ = pos_acidente;
+    int estou_aq;
+    //mapa * pos_acidente = drawAcidente();
     for (k = 0; k < INTERACOES; k++) {
         for (i = 0; i < QTD_AGENTES; i++) {
+            bool flag_init = false;
             mapa * pos_atual;
-
+            mapa * pos_comparacao = &inicio_;
             while (true) {
                 pos_atual = lst_pop_get(agentes[i].rota);
-
-                if (pos_atual->dado == pos_acidente->dado)
-                    break;
+                //estou_aq = pos_atual->dado;
+                //printf("\nEstou na pos: %d\nMy lista atual\n", estou_aq);
+                //lst_print(agentes[i].rota);
+                 if (!flag_init && pos_atual->dado == inicio_.dado) {
+                    pos_comparacao = &final;
+                    flag_init = true;
+                } else if (flag_init && pos_atual->dado == final.dado)break;
 
                 if (!(pos_atual->linha - 1 < 0))
-                    if (!lst_occurs(agentes[i].rota, &matriz[pos_atual->linha - 1][pos_atual->col]))
-                        distancia(agentes[i], pos_acidente, &matriz[pos_atual->linha - 1][pos_atual->col]);
+                    //if (!lst_occurs(agentes[i].rota, &matriz[pos_atual->linha - 1][pos_atual->col]))
+                        distancia(agentes[i], pos_comparacao, &matriz[pos_atual->linha - 1][pos_atual->col]);
                 if (pos_atual->linha != LIN - 1)
-                    if (!lst_occurs(agentes[i].rota, &matriz[pos_atual->linha + 1][pos_atual->col]))
-                        distancia(agentes[i], pos_acidente, &matriz[pos_atual->linha + 1][pos_atual->col]);
+                    //if (!lst_occurs(agentes[i].rota, &matriz[pos_atual->linha + 1][pos_atual->col]))
+                        distancia(agentes[i], pos_comparacao, &matriz[pos_atual->linha + 1][pos_atual->col]);
                 if (!(pos_atual->col - 1 < 0))
-                    if (!lst_occurs(agentes[i].rota, &matriz[pos_atual->linha][pos_atual->col - 1]))
-                        distancia(agentes[i], pos_acidente, &matriz[pos_atual->linha][pos_atual->col - 1]);
+                    //if (!lst_occurs(agentes[i].rota, &matriz[pos_atual->linha][pos_atual->col - 1]))
+                        distancia(agentes[i], pos_comparacao, &matriz[pos_atual->linha][pos_atual->col - 1]);
                 if (pos_atual->col != COL - 1)
-                    if (!lst_occurs(agentes[i].rota, &matriz[pos_atual->linha][pos_atual->col + 1]));
-                        distancia(agentes[i], pos_acidente, &matriz[pos_atual->linha][pos_atual->col + 1]);
+                    //if (!lst_occurs(agentes[i].rota, &matriz[pos_atual->linha][pos_atual->col + 1]))
+                        distancia(agentes[i], pos_comparacao, &matriz[pos_atual->linha][pos_atual->col + 1]);
 
                 roleta(agentes[i]);
                 lst_ins(agentes[i].rota, best_decisao(agentes[i]));
@@ -223,8 +230,11 @@ static void interacoes()
 
         atualiza_feromonio(best_agente());
 
-        if (k == INTERACOES - 1)
+        if (k == INTERACOES - 1) {
             print_result();
+            printf("Best Agente\n");
+            lst_print(best_agente());
+        }
         else
             kill_rota_agentes();
     }
