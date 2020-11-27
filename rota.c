@@ -84,6 +84,24 @@ void print_result()
 }
 /*****************************Funcoes Privadas****************************************************/
 
+static void write_arquivo(lst_ptr_cbc l)
+{
+    FILE * ptr_arq;
+    lst_ptr p = l->prox;
+    ptr_arq = fopen("result_rota.txt","w");
+    fprintf(ptr_arq , "%s", "v\n");
+    while (p != (lst_ptr)l) {
+        if(p->dado->dado == inicio_.dado || p->dado->dado == final.dado)
+            if(p->dado->dado == inicio_.dado)
+                fprintf(ptr_arq, "a%da\n", p->dado->dado);
+            else fprintf(ptr_arq, "h%dh\n", p->dado->dado);
+        else fprintf(ptr_arq, "%d\n", p->dado->dado);
+        p = p->prox;
+    }
+    fprintf(ptr_arq , "%s", "v\n");
+    fclose(ptr_arq);
+}
+
 static void distancia(Formiga f, mapa * pos_atual, mapa * pos_comparacao)
 {
     possibilidades possib_aux;
@@ -234,6 +252,7 @@ static void interacoes()
             print_result();
             printf("Best Agente\n");
             lst_print(best_agente());
+            write_arquivo(best_agente());
         }
         else
             kill_rota_agentes();

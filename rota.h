@@ -5,9 +5,9 @@
 #define LIN 5
 #define COL 6
 
-#define INTERACOES 10000
-#define QTD_AGENTES 30
-#define FEROMONIO 0.1
+#define INTERACOES 1000
+#define QTD_AGENTES 5
+#define FEROMONIO 0.2
 #define EVAP_FEROMONIO 0.1
 
 /********Objetos Publicos*************/
